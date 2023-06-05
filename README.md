@@ -1,6 +1,9 @@
 # 0D0S
 
 ## 팀구성
+
+![subinlee.png](img/subinlee.png)
+
 |직책|이름|
 |:---:|:---:|
 |팀장|이수빈|
