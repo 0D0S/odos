@@ -1,4 +1,4 @@
-# One Day One Solve(ODOS)
+# 0D0S
 
 ## 정권교체
 - 2023.06.05일부로 subinlee가 주도하여 진행
