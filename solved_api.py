@@ -126,9 +126,10 @@ def csv_read() -> list:
                 USERS["solved"].append([name, intra_id, int(tmp[1]), continuity])
                 continue
 
+            if int(flag) > 1:  # 2일 이상 안 풀면 연속 기록이 깨짐
+                continuity = "0"
+
             if str(tmp[0]) <= solve:  # 오늘 안 푼 유저
-                if int(flag) > 1:  # 2일 이상 안 풀면 연속 기록이 깨짐
-                    continuity = "0"
                 if update == TODAY:  # 오늘 이미 확인한 유저
                     tmp_lst.append(
                         [
@@ -232,14 +233,14 @@ def print_name():
         if loc == "null":  # 지금 클러스터에 없는 사람
             if cluster:  # 출근을 했던 사람
                 no_cluster.append(
-                    f"- {intra_id} ({name}) {TIER[tier]} \n(퇴근함)"
+                    f"- {intra_id} ({name}) {TIER[tier]} \n({continuity}일 연속으로 푸는 중, 퇴근함)"
                 )
             else:  # 출근도 안 한 사람
                 no_cluster.append(
-                    f"- {intra_id} ({name}) {TIER[tier]} \n(출근 안 함)"
+                    f"- {intra_id} ({name}) {TIER[tier]} \n({continuity}일 연속으로 푸는 중, 출근 안 함)"
                 )
         else:  # 현재 클러스터에 있는 사람
-            text += f"- {intra_id} ({name}) {TIER[tier]} \n(현재 위치: {loc})\n"
+            text += f"- {intra_id} ({name}) {TIER[tier]} \n({continuity}일 연속으로 푸는 중, 현재 위치: {loc})\n"
     for s in no_cluster:
         text += s + "\n"
 
