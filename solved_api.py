@@ -232,14 +232,14 @@ def print_name():
         if loc == "null":  # 지금 클러스터에 없는 사람
             if cluster:  # 출근을 했던 사람
                 no_cluster.append(
-                    f"- {intra_id} ({name}) {TIER[tier]} \n({continuity}일 연속으로 푸는 중, 퇴근함)"
+                    f"- {intra_id} ({name}) {TIER[tier]} \n(퇴근함)"
                 )
             else:  # 출근도 안 한 사람
                 no_cluster.append(
-                    f"- {intra_id} ({name}) {TIER[tier]} \n({continuity}일 연속으로 푸는 중, 출근 안 함)"
+                    f"- {intra_id} ({name}) {TIER[tier]} \n(출근 안 함)"
                 )
         else:  # 현재 클러스터에 있는 사람
-            text += f"- {intra_id} ({name}) {TIER[tier]} \n({continuity}일 연속으로 푸는 중, 현재 위치: {loc})\n"
+            text += f"- {intra_id} ({name}) {TIER[tier]} \n(현재 위치: {loc})\n"
     for s in no_cluster:
         text += s + "\n"
 
