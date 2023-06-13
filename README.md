@@ -73,3 +73,4 @@
 # 참고
 - [42seoul, 42api](https://api.intra.42.fr/apidoc)
 - [hivehelsinki의 42api-lib](https://github.com/hivehelsinki/42api-lib)
+- [emoji copy](https://www.emojicopy.com/)
