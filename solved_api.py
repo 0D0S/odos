@@ -218,13 +218,42 @@ def get_location(intra_id: str) -> tuple:
     return (loc, cluster) if loc else ("null", cluster)
 
 
+def only_print_loc() -> str:
+    """
+    solved_api가 정상 작동하지 않을 때, 위치만 출력하는 함수
+    """
+    text = f"⏰현재 시각: {datetime.datetime.now()}\n\n"  # 현재 시각
+    pos = {"cluster": [], "home": [], "leave": []}
+    for name, intra_id in USERS["none_user"]:
+        loc, cluster = get_location(intra_id)
+        if loc == "null":
+            if cluster:
+                pos["leave"].append(f"- {intra_id} ({name}, 퇴근함)\n")
+            else:
+                pos["home"].append(f"- {intra_id} ({name}, 출근 안함)\n")
+        else:
+            pos["cluster"].append(f"- {intra_id} ({name}, 현재 위치: {loc})\n")
+    text += "🖥️아마 코딩 중🖥️\n"
+    for t in pos["cluster"]:
+        text += t
+    text += "\n🛏️퇴근 or 클러스터 어딘가💻\n"
+    for t in pos["leave"]:
+        text += t
+    text += "\n🙏출근 안함🙏\n"
+    for t in pos["home"]:
+        text += t
+    text += "\n주의 사항: 출근은 새벽 6시 ~ 익일 새벽 5시 55분 사이 맥 로그인 기록으로 판단합니다.\n"
+    return text
+
+
 def print_name():
     """
     푼 사람, 안 푼 사람, 새로운 사람을 정리해서 출력하는 함수
 
     """
-    text = ""
-    text += f"⏰현재 시각: {datetime.datetime.now()}\n\n"  # 현재 시각
+    if not USERS["solved"] and not USERS["unsolved"]:
+        return only_print_loc()
+    text = f"⏰현재 시각: {datetime.datetime.now()}\n\n"  # 현재 시각
     if USERS["solved"]:
         text += "😀푼 사람😀\n"
     no_cluster = []
@@ -280,7 +309,7 @@ def print_name():
         text += "\n🙏백준 아이디 알려주시고 solved.ac 동의 해주세요🙏\n"
     for name, intra_id in USERS["none_user"]:
         loc, cluster = get_location(intra_id)
-        if loc == "null" and cluster == 0:
+        if loc == "null":
             if cluster:
                 text += f"- {intra_id} ({name})\n(퇴근함)\n"
             else:
