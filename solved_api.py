@@ -233,16 +233,16 @@ def only_print_loc() -> str:
                 pos["home"].append(f"- {intra_id} ({name}, 출근 안함)\n")
         else:
             pos["cluster"].append(f"- {intra_id} ({name}, 현재 위치: {loc})\n")
-    text += "🖥️아마 코딩 중🖥️\n"
+    text += "🖥️ 아마 코딩 중 🖥️\n"
     for t in pos["cluster"]:
         text += t
-    text += "\n🛏️퇴근 or 클러스터 어딘가💻\n"
+    text += "\n🛏️ 퇴근 or 클러스터 어딘가 💻\n"
     for t in pos["leave"]:
         text += t
-    text += "\n🙏출근 안함🙏\n"
+    text += "\n🙏 출근 안함 🙏\n"
     for t in pos["home"]:
         text += t
-    text += "\n주의 사항: 출근은 새벽 6시 ~ 익일 새벽 5시 55분 사이 맥 로그인 기록으로 판단합니다.\n"
+    text += "\n\n📢현재 solved.api 관련 문제가 있습니다.\n"
     return text
 
 
