@@ -25,11 +25,14 @@ def solved_api(user: str) -> None:
     url = "https://solved.ac/api/v3/user/show"
     querystring = {"handle": user}
     headers = {"Accept": "application/json"}
-    response = requests.get(url, headers=headers, params=querystring)
-    print(response)
-    print(response.json())
+    try:
+        response = requests.get(url, headers=headers, params=querystring)
+        print(response.json())
+    except:
+        print(response)
 
 
 if __name__ == "__main__":
-    intra_api("myko")
-    solved_api("kmj951015")
+    intra_api(input("42seoul ID: "))
+    print()
+    solved_api(input("baekjoon ID:"))
