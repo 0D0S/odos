@@ -251,8 +251,6 @@ def print_name():
     푼 사람, 안 푼 사람, 새로운 사람을 정리해서 출력하는 함수
 
     """
-    if not USERS["solved"] and not USERS["unsolved"]:
-        return only_print_loc()
     text = f"⏰현재 시각: {datetime.datetime.now()}\n\n"  # 현재 시각
     if USERS["solved"]:
         text += "😀푼 사람😀\n"
@@ -322,8 +320,11 @@ def print_name():
 
 if __name__ == "__main__":
     lst = csv_read()  # csv 파일 정보를 가져옴
-    csv_write(lst, "w")  # csv 파일 최신화
-    message = print_name()  # 현재 위치, 결과 출력
+    if not USERS["solved"] and not USERS["unsolved"]:
+        message = only_print_loc()
+    else:
+        csv_write(lst, "w")  # csv 파일 최신화
+        message = print_name()  # 현재 위치, 결과 출력
     print(message)
     base_dir = os.path.dirname(os.path.realpath(__file__))
     with open(base_dir + "/token.txt", "r") as token:
