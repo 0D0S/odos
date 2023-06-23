@@ -242,7 +242,7 @@ def only_print_loc() -> str:
     text += "\n🙏 출근 안함 🙏\n"
     for t in pos["home"]:
         text += t
-    text += "\n\n📢현재 solved.api 관련 문제가 있습니다.\n"
+    text += "\n📢현재 solved.api 관련 문제가 있습니다.\n"
     return text
 
 
