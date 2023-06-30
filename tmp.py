@@ -9,10 +9,10 @@ def intra_api(user: str) -> None:
         user: intra id
     """
     response = ic.get("users", params={"filter[login]": user})
+    loc = response.json()
     try:
-        loc = response.json()
         print(loc)
-    except:
+    except requests.exceptions.JSONDecodeError:
         print(response)
 
 
@@ -25,14 +25,14 @@ def solved_api(user: str) -> None:
     url = "https://solved.ac/api/v3/user/show"
     querystring = {"handle": user}
     headers = {"Accept": "application/json"}
+    response = requests.get(url, headers=headers, params=querystring)
     try:
-        response = requests.get(url, headers=headers, params=querystring)
         print(response.json())
-    except:
+    except requests.exceptions.JSONDecodeError:
         print(response)
 
 
 if __name__ == "__main__":
     intra_api(input("42seoul ID: "))
     print()
-    solved_api(input("baekjoon ID:"))
+    solved_api(input("baekjoon ID: "))
