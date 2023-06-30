@@ -8,12 +8,13 @@ from slack_bot import SlackAPI
 # 직접 실행하는 경우, os.getcwd()로 실행하면 되지만
 # crontab으로 실행하는 경우 getcwd로 가져오는 경로가 다른 것으로 보임
 # 그래서 우선 절대 경로를 직접 넣는 것으로 수정
-# PATH = os.getcwd() + "/solved.csv"
-PATH = "/home/ubuntu/odos/solved.csv"  # 파일의 절대 경로
+PATH = os.getcwd() + "/solved.csv"
+# PATH = "/home/ubuntu/odos/solved.csv"  # 파일의 절대 경로
 TODAY = (datetime.datetime.now() - datetime.timedelta(hours=6)).strftime(
     "%Y-%m-%d"
 )  # 현재 날짜 (새벽 6시부터 시작하도록)
 URL = "https://solved.ac/api/v3/user/show"  # solved.ac 홈페이지 주소
+URL_42 = "https://api.evaluation.42seoul.link/user/"  # 42pear 홈페이지 주소
 HEADERS = {"Content-Type": "application/json"}
 USERS = {
     "unsolved": [],
@@ -112,71 +113,76 @@ def csv_read() -> list:
         rd = csv.reader(f)
         if not rd:  # 정보가 없으면 아무것도 안씀
             return []
+        # solved 안해
         for name, intra_id, baek_id, solve, update, flag, tier, continuity in rd:
-            tmp = total_solve(baek_id)  # solved에 정보를 요청해서 최신화
-            if tmp[0] == float("inf") and tmp[1] == float("inf"):  # solved에 없는 유저 처리
-                tmp_lst.append([name, intra_id, baek_id, 0, TODAY, flag, 0, 1])
-                USERS["none_user"].append([name, intra_id])
-                continue
+            USERS["none_user"].append([name, intra_id])
+        return tmp_lst
 
-            if update == TODAY and flag == "0":  # 오늘 이미 푼 것을 확인한 유저
-                tmp_lst.append(
-                    [name, intra_id, baek_id, tmp[0], TODAY, flag, tmp[1], continuity]
-                )
-                USERS["solved"].append([name, intra_id, int(tmp[1]), continuity])
-                continue
-
-            if int(flag) > 1:  # 2일 이상 안 풀면 연속 기록이 깨짐
-                continuity = "0"
-
-            if str(tmp[0]) <= solve:  # 오늘 안 푼 유저
-                if update == TODAY:  # 오늘 이미 확인한 유저
-                    tmp_lst.append(
-                        [
-                            name,
-                            intra_id,
-                            baek_id,
-                            tmp[0],
-                            TODAY,
-                            int(flag),
-                            tmp[1],
-                            continuity,
-                        ]
-                    )
-                    USERS["unsolved"].append((name, intra_id, int(flag), int(tmp[1])))
-                else:  # 오늘 확인하지 않은 유저 -> 안 푼 날짜를 하루 늘림
-                    tmp_lst.append(
-                        [
-                            name,
-                            intra_id,
-                            baek_id,
-                            tmp[0],
-                            TODAY,
-                            int(flag) + 1,
-                            tmp[1],
-                            continuity,
-                        ]
-                    )
-                    USERS["unsolved"].append(
-                        (name, intra_id, int(flag) + 1, int(tmp[1]))
-                    )
-            else:  # 오늘 푼 유저 -> 연속 날짜를 하루 늘리고 안 푼 날짜를 0으로 초기화
-                tmp_lst.append(
-                    [
-                        name,
-                        intra_id,
-                        baek_id,
-                        tmp[0],
-                        TODAY,
-                        0,
-                        int(tmp[1]),
-                        str(int(continuity) + 1),
-                    ]
-                )
-                USERS["solved"].append(
-                    [name, intra_id, int(tmp[1]), str(int(continuity) + 1)]
-                )
-    return tmp_lst
+    #     for name, intra_id, baek_id, solve, update, flag, tier, continuity in rd:
+    #         tmp = total_solve(baek_id)  # solved에 정보를 요청해서 최신화
+    #         if tmp[0] == float("inf") and tmp[1] == float("inf"):  # solved에 없는 유저 처리
+    #             tmp_lst.append([name, intra_id, baek_id, 0, TODAY, flag, 0, 1])
+    #             USERS["none_user"].append([name, intra_id])
+    #             continue
+    #
+    #         if update == TODAY and flag == "0":  # 오늘 이미 푼 것을 확인한 유저
+    #             tmp_lst.append(
+    #                 [name, intra_id, baek_id, tmp[0], TODAY, flag, tmp[1], continuity]
+    #             )
+    #             USERS["solved"].append([name, intra_id, int(tmp[1]), continuity])
+    #             continue
+    #
+    #         if int(flag) > 1:  # 2일 이상 안 풀면 연속 기록이 깨짐
+    #             continuity = "0"
+    #
+    #         if str(tmp[0]) <= solve:  # 오늘 안 푼 유저
+    #             if update == TODAY:  # 오늘 이미 확인한 유저
+    #                 tmp_lst.append(
+    #                     [
+    #                         name,
+    #                         intra_id,
+    #                         baek_id,
+    #                         tmp[0],
+    #                         TODAY,
+    #                         int(flag),
+    #                         tmp[1],
+    #                         continuity,
+    #                     ]
+    #                 )
+    #                 USERS["unsolved"].append((name, intra_id, int(flag), int(tmp[1])))
+    #             else:  # 오늘 확인하지 않은 유저 -> 안 푼 날짜를 하루 늘림
+    #                 tmp_lst.append(
+    #                     [
+    #                         name,
+    #                         intra_id,
+    #                         baek_id,
+    #                         tmp[0],
+    #                         TODAY,
+    #                         int(flag) + 1,
+    #                         tmp[1],
+    #                         continuity,
+    #                     ]
+    #                 )
+    #                 USERS["unsolved"].append(
+    #                     (name, intra_id, int(flag) + 1, int(tmp[1]))
+    #                 )
+    #         else:  # 오늘 푼 유저 -> 연속 날짜를 하루 늘리고 안 푼 날짜를 0으로 초기화
+    #             tmp_lst.append(
+    #                 [
+    #                     name,
+    #                     intra_id,
+    #                     baek_id,
+    #                     tmp[0],
+    #                     TODAY,
+    #                     0,
+    #                     int(tmp[1]),
+    #                     str(int(continuity) + 1),
+    #                 ]
+    #             )
+    #             USERS["solved"].append(
+    #                 [name, intra_id, int(tmp[1]), str(int(continuity) + 1)]
+    #             )
+    # return tmp_lst
 
 
 def csv_write(tmp_lst: list, option: str):
@@ -218,6 +224,17 @@ def get_location(intra_id: str) -> tuple:
     return (loc, cluster) if loc else ("null", cluster)
 
 
+def blackhole_cal(intra_id: str) -> str:
+    response = requests.get(URL_42 + intra_id)
+    response = response.json()
+    if not response["blackhole"]:
+        return "Infinity"
+    date = response["blackhole"].split("T")[0]
+    date = list(map(int, date.split("-")))
+    blackhole = datetime.date(date[0], date[1], date[2])
+    return str((blackhole - datetime.date.today()).days)
+
+
 def only_print_loc() -> str:
     """
     solved_api가 정상 작동하지 않을 때, 위치만 출력하는 함수
@@ -226,23 +243,33 @@ def only_print_loc() -> str:
     pos = {"cluster": [], "home": [], "leave": []}
     for name, intra_id in USERS["none_user"]:
         loc, cluster = get_location(intra_id)
+        blackhole = blackhole_cal(intra_id)
         if loc == "null":
             if cluster:
-                pos["leave"].append(f"- {intra_id} ({name}, 퇴근함)\n")
+                pos["leave"].append(
+                    f"- {intra_id} (남은 날: {blackhole})\n({name}, 퇴근함)\n"
+                )
             else:
-                pos["home"].append(f"- {intra_id} ({name}, 출근 안함)\n")
+                pos["home"].append(
+                    f"- {intra_id} (남은 날: {blackhole})\n({name}, 출근 안함)\n"
+                )
         else:
-            pos["cluster"].append(f"- {intra_id} ({name}, 현재 위치: {loc})\n")
-    text += "🖥️ 아마 코딩 중 🖥️\n"
+            pos["cluster"].append(
+                f"- {intra_id} (남은 날: {blackhole})\n({name}, 현재 위치: {loc})\n"
+            )
+    if pos["cluster"]:
+        text += "🖥️ 아마 코딩 중 🖥️\n"
     for t in pos["cluster"]:
         text += t
-    text += "\n🛏️ 퇴근 or 클러스터 어딘가 💻\n"
+    if pos["leave"]:
+        text += "\n🛏️ 퇴근 or 클러스터 어딘가 💻\n"
     for t in pos["leave"]:
         text += t
-    text += "\n🙏 출근 안함 🙏\n"
+    if pos["home"]:
+        text += "\n🙏 출근 안함 🙏\n"
     for t in pos["home"]:
         text += t
-    text += "\n📢현재 solved.api 관련 문제가 있습니다.\n"
+    text += "\n📢현재 저희 서버에 문제가 있습니다.\n"
     return text
 
 
@@ -257,6 +284,7 @@ def print_name():
     no_cluster = []
     for name, intra_id, tier, continuity in USERS["solved"]:
         loc, cluster = get_location(intra_id)  # 42api에서 정보 받아오기
+        blackhole = blackhole_cal(intra_id)
         if loc == "null":  # 지금 클러스터에 없는 사람
             if cluster:  # 출근을 했던 사람
                 no_cluster.append(
