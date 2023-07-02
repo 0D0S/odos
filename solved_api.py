@@ -357,6 +357,6 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.realpath(__file__))
     with open(base_dir + "/token.txt", "r") as token:
         SLACK_TOKEN = token.readline()
-    if 7 < datetime.datetime.now().hour:
-        slack = SlackAPI(SLACK_TOKEN)
-        slack.post_chat_message("독촉", message)
+    # if 7 < datetime.datetime.now().hour: # solved.ac용 조건문
+    slack = SlackAPI(SLACK_TOKEN)
+    slack.post_chat_message("독촉", message)
