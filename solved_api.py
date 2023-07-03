@@ -247,15 +247,15 @@ def only_print_loc() -> str:
         if loc == "null":
             if cluster:
                 pos["leave"].append(
-                    f"- {intra_id} (남은 날: {blackhole})\n({name}, 퇴근함)\n"
+                    f"- {name} (블랙홀 기간: {blackhole}, 퇴근함)\n"
                 )
             else:
                 pos["home"].append(
-                    f"- {intra_id} (남은 날: {blackhole})\n({name}, 출근 안함)\n"
+                    f"- {name} (블랙홀 기간: {blackhole}, 출근 안함)\n"
                 )
         else:
             pos["cluster"].append(
-                f"- {intra_id} (남은 날: {blackhole})\n({name}, 현재 위치: {loc})\n"
+                f"- {name} (블랙홀 기간: {blackhole}, 현재 위치: {loc})\n"
             )
     if pos["cluster"]:
         text += "🖥️ 아마 코딩 중 🖥️\n"
