@@ -8,8 +8,8 @@ from slack_bot import SlackAPI
 # 직접 실행하는 경우, os.getcwd()로 실행하면 되지만
 # crontab으로 실행하는 경우 getcwd로 가져오는 경로가 다른 것으로 보임
 # 그래서 우선 절대 경로를 직접 넣는 것으로 수정
-PATH = os.getcwd() + "/solved.csv"
-# PATH = "/home/ubuntu/odos/solved.csv"  # 파일의 절대 경로
+# PATH = os.getcwd() + "/solved.csv"
+PATH = "/home/ubuntu/odos/solved.csv"  # 파일의 절대 경로
 TODAY = (datetime.datetime.now() - datetime.timedelta(hours=6)).strftime(
     "%Y-%m-%d"
 )  # 현재 날짜 (새벽 6시부터 시작하도록)
@@ -232,7 +232,7 @@ def blackhole_cal(intra_id: str) -> str:
     date = response["blackhole"].split("T")[0]
     date = list(map(int, date.split("-")))
     blackhole = datetime.date(date[0], date[1], date[2])
-    return str((blackhole - datetime.date.today()).days)
+    return str((blackhole - datetime.date.today()).days + 1)
 
 
 def only_print_loc() -> str:
