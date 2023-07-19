@@ -3,13 +3,13 @@ import csv
 import os
 import datetime
 from intra import ic
-from slack_bot import SlackAPI
+from SlackAPI import SlackAPI
 
 # 직접 실행하는 경우, os.getcwd()로 실행하면 되지만
 # crontab으로 실행하는 경우 getcwd로 가져오는 경로가 다른 것으로 보임
 # 그래서 우선 절대 경로를 직접 넣는 것으로 수정
 # PATH = os.getcwd() + "/solved.csv"
-PATH = "/home/ubuntu/odos/solved.csv"  # 파일의 절대 경로
+PATH = "/home/ubuntu/src/solved.csv"  # 파일의 절대 경로
 TODAY = (datetime.datetime.now() - datetime.timedelta(hours=6)).strftime(
     "%Y-%m-%d"
 )  # 현재 날짜 (새벽 6시부터 시작하도록)
@@ -246,17 +246,11 @@ def only_print_loc() -> str:
         blackhole = blackhole_cal(intra_id)
         if loc == "null":
             if cluster:
-                pos["leave"].append(
-                    f"- {name} (블랙홀 기간: {blackhole}, 퇴근함)\n"
-                )
+                pos["leave"].append(f"- {name} (블랙홀 기간: {blackhole}, 퇴근함)\n")
             else:
-                pos["home"].append(
-                    f"- {name} (블랙홀 기간: {blackhole}, 출근 안함)\n"
-                )
+                pos["home"].append(f"- {name} (블랙홀 기간: {blackhole}, 출근 안함)\n")
         else:
-            pos["cluster"].append(
-                f"- {name} (블랙홀 기간: {blackhole}, 현재 위치: {loc})\n"
-            )
+            pos["cluster"].append(f"- {name} (블랙홀 기간: {blackhole}, 현재 위치: {loc})\n")
     if pos["cluster"]:
         text += "🖥️ 아마 코딩 중 🖥️\n"
     for t in pos["cluster"]:
