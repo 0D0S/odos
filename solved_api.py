@@ -3,13 +3,13 @@ import csv
 import os
 import datetime
 from intra import ic
-from SlackAPI import SlackAPI
+from slack_api import SlackAPI
 
 # 직접 실행하는 경우, os.getcwd()로 실행하면 되지만
 # crontab으로 실행하는 경우 getcwd로 가져오는 경로가 다른 것으로 보임
 # 그래서 우선 절대 경로를 직접 넣는 것으로 수정
 # PATH = os.getcwd() + "/solved.csv"
-PATH = "/home/ubuntu/src/solved.csv"  # 파일의 절대 경로
+PATH = "/home/ubuntu/odos/solved.csv"  # 파일의 절대 경로
 TODAY = (datetime.datetime.now() - datetime.timedelta(hours=6)).strftime(
     "%Y-%m-%d"
 )  # 현재 날짜 (새벽 6시부터 시작하도록)
@@ -349,7 +349,7 @@ if __name__ == "__main__":
         message = print_name()  # 현재 위치, 결과 출력
     print(message)
     base_dir = os.path.dirname(os.path.realpath(__file__))
-    with open(base_dir + "/token.txt", "r") as token:
+    with open("/home/ubuntu/odos/token.txt", "r") as token:
         SLACK_TOKEN = token.readline()
     # if 7 < datetime.datetime.now().hour: # solved.ac용 조건문
     slack = SlackAPI(SLACK_TOKEN)
