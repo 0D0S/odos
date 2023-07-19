@@ -1,3 +1,4 @@
+import os
 import csv
 import datetime
 from typing import List, Dict
@@ -5,8 +6,10 @@ from SlackAPI import SlackAPI  # type: ignore
 from Student import Student  # type: ignore
 
 
-CSV_PATH = "../doc/solved.csv"
-SLACK_TOKEN_PATH = "../doc/slack_token.txt"
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+PARENT_DIR = os.path.dirname(BASE_DIR)
+CSV_PATH = PARENT_DIR + "/doc/solved.csv"
+SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
 USERS: List = []
 TIER: List[str] = [
     "🖤 newbie",
@@ -90,4 +93,5 @@ def print_loc() -> str:
 def chat_message(channel: str, message: str) -> None:
     with open(SLACK_TOKEN_PATH, "r") as token:
         slack_token = token.readline()
-    SlackAPI(slack_token).post_chat_message(channel, message)
+    slack_api = SlackAPI(slack_token)
+    slack_api.post_chat_message(channel, message)

@@ -24,7 +24,8 @@ class IntraAPIClient(object):
 
     def __init__(self, progress_bar=False):
         base_dir = os.path.dirname(os.path.realpath(__file__))
-        with open("../doc/config.yml", "r") as cfg_stream:
+        parent_dir = os.path.dirname(base_dir)
+        with open(parent_dir + "/doc/config.yml", "r") as cfg_stream:
             config = yaml.load(cfg_stream, Loader=yaml.BaseLoader)
             self.client_id = config["intra"]["client"]
             self.client_secret = config["intra"]["secret"]
