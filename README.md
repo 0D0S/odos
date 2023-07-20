@@ -22,11 +22,11 @@
 
 ### commit message
 
-메세지는 [gitmoji](https://gitmoji.dev/) 활용
+- 메세지는 [gitmoji](https://gitmoji.dev/) 활용
 
 ### formatting
 
-코드는 [black](https://github.com/psf/black)으로 포매팅
+- 코드는 [black](https://github.com/psf/black)으로 포매팅
 
 ### naming convention
 
