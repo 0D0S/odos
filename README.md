@@ -44,8 +44,10 @@
 - 변수 종류
   - 내부 변수(internal): 맨 앞 밑줄 하나
     - _protected_attribute_name = 0
+    - `from Module import *` 했을 때, 가져오지 않는다.
   - 숨은 변수(hidden): 맨 앞 밑줄 두 개
     - __hidden_attribute_name = 0
+    - 클래스 속성들도 사용
 
 - 자세한 건 [PEP8 Naming Conventions](https://peps.python.org/pep-0008/#naming-conventions) 참고
 
