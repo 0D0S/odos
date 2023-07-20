@@ -8,11 +8,11 @@ URL42 = "https://api.evaluation.42seoul.link/user/"  # 42pear 홈페이지 주�
 
 class Student:  # type: ignore
     def __init__(self, name: str, intra_id: str, baek_id: str) -> None:
-        self._name: str = name  # 별명이 포함된 이름
-        self._intra_id: str = intra_id  # 42seoul 인트라 아이디
-        self._baek_id: str = baek_id  # 백준 아이디
-        self._loc, self._is_working = self._get_location()  # 클러스터 위치, 출퇴근 여부
-        self._blackhole: str = self._cal_blackhole()  # 남은 블랙홀 기간
+        self.__name: str = name  # 별명이 포함된 이름
+        self.__intra_id: str = intra_id  # 42seoul 인트라 아이디
+        self.__baek_id: str = baek_id  # 백준 아이디
+        self.__loc, self._is_working = self._get_location()  # 클러스터 위치, 출퇴근 여부
+        self.__blackhole: str = self._cal_blackhole()  # 남은 블랙홀 기간
 
     def _get_location(self) -> Tuple[str, bool]:
         """
@@ -21,7 +21,7 @@ class Student:  # type: ignore
             (위치, 출퇴근 여부)
         """
         response = ic.get(
-            "users", params={"filter[login]": self._intra_id}
+            "users", params={"filter[login]": self.__intra_id}
         )  # 42api 정보 받기
         loc = response.json()[0]["location"]  # 현재 위치
         date, time = response.json()[0]["updated_at"].split("T")  # 최근 맥 로그인 시간(UTC)
@@ -44,7 +44,7 @@ class Student:  # type: ignore
         Returns:
             남은 블랙홀 일 수
         """
-        response = requests.get(URL42 + self._intra_id).json()  # 42 pear api 정보
+        response = requests.get(URL42 + self.__intra_id).json()  # 42 pear api 정보
         if not response["blackhole"]:  # 블랙홀 정보가 없으면 멤버
             return "Infinity"
         date = response["blackhole"].split("T")[0]  # T 기준 앞쪽이 날짜
@@ -53,17 +53,17 @@ class Student:  # type: ignore
         return str((blackhole - datetime.date.today()).days + 1)
 
     def get_name(self) -> str:
-        return self._name
+        return self.__name
 
     def get_intra_id(self) -> str:
-        return self._intra_id
+        return self.__intra_id
 
     def get_baek_id(self) -> str:
-        return self._baek_id
+        return self.__baek_id
 
     def get_loc(self) -> str:
-        print(self._loc, type(self._loc))
-        return self._loc
+        print(self.__loc, type(self.__loc))
+        return self.__loc
 
     def get_is_working(self) -> bool:
         """
@@ -75,4 +75,4 @@ class Student:  # type: ignore
         return self._is_working
 
     def get_blackhole(self) -> str:
-        return self._blackhole
+        return self.__blackhole
