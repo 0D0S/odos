@@ -18,17 +18,17 @@
 - 들어오는 건 자유지만 퇴사는 없음!
 - 금지 단어: 팀장님, 역시
 
-### convention
+## Convention
 
-#### commit message
+### commit message
 
 메세지는 [gitmoji](https://gitmoji.dev/) 활용
 
-#### formatting
+### formatting
 
 코드는 [black](https://github.com/psf/black)으로 포매팅
 
-#### naming convention
+### naming convention
 
 |                               종류                                |         규칙          |            예시            |
 |:---------------------------------------------------------------:|:-------------------:|:------------------------:|
