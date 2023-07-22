@@ -27,41 +27,39 @@ class IntraAPIClient(object):
         parent_dir = os.path.dirname(base_dir)
         with open(parent_dir + "/doc/config.yml", "r") as cfg_stream:
             config = yaml.load(cfg_stream, Loader=yaml.BaseLoader)
-            self.__client_id = config["intra"]["client"]
-            self.__client_secret = config["intra"]["secret"]
-            self.__token_url = config["intra"]["uri"]
-            self.__api_url = config["intra"]["endpoint"]
-            self.__scopes = config["intra"]["scopes"]
-            self.__progress_bar = progress_bar
-            self.__token = None
+            self._client_id = config["intra"]["client"]
+            self._client_secret = config["intra"]["secret"]
+            self._token_url = config["intra"]["uri"]
+            self._api_url = config["intra"]["endpoint"]
+            self._scopes = config["intra"]["scopes"]
+            self._progress_bar = progress_bar
+            self._token = None
 
     def request_token(self):
         request_token_payload = {
-            "client_id": self.__client_id,
-            "client_secret": self.__client_secret,
+            "client_id": self._client_id,
+            "client_secret": self._client_secret,
             "grant_type": "client_credentials",
-            "scope": self.__scopes,
+            "scope": self._scopes,
         }
         LOG.debug("Attempting to get a token from intranet")
-        self.__token = "token_dummy"
-        res = self.request(
-            requests.post, self.__token_url, params=request_token_payload
-        )
+        self._token = "token_dummy"
+        res = self.request(requests.post, self._token_url, params=request_token_payload)
         rj = res.json()
-        self.__token = rj["access_token"]
-        LOG.info(f"Got new acces token from intranet {self.__token}")
+        self._token = rj["access_token"]
+        LOG.info(f"Got new acces token from intranet {self._token}")
 
     def _make_authed_header(self, header={}):
-        ret = {"Authorization": f"Bearer {self.__token}"}
+        ret = {"Authorization": f"Bearer {self._token}"}
         ret.update(header)
         return ret
 
     def request(self, method, url, headers={}, **kwargs):
-        if not self.__token:
+        if not self._token:
             self.request_token()
         tries = 0
         if not url.startswith("http"):
-            url = f"{self.__api_url}/{url}"
+            url = f"{self._api_url}/{url}"
 
         while True:
             LOG.debug(f"Attempting a request to {url}")
@@ -84,9 +82,9 @@ class IntraAPIClient(object):
                         desc == "The access token expired"
                         or desc == "The access token is invalid"
                     ):
-                        if self.__token != "token_dummy":
+                        if self._token != "token_dummy":
                             LOG.warning(
-                                f"Server said our token {self.__token} {desc.split(' ')[-1]}"
+                                f"Server said our token {self._token} {desc.split(' ')[-1]}"
                             )
                         if tries < 5:
                             LOG.debug("Renewing token")
@@ -154,7 +152,7 @@ class IntraAPIClient(object):
             total=last_page - kwargs["params"]["page"] + 1,
             desc=url,
             unit="p",
-            disable=not self.__progress_bar,
+            disable=not self._progress_bar,
         ):
             kwargs["params"]["page"] = page + 1
             total += self.get(url=url, headers=headers, **kwargs).json()
@@ -186,7 +184,7 @@ class IntraAPIClient(object):
             total=last_page - page + 2,
             desc=url,
             unit="p",
-            disable=not self.__progress_bar,
+            disable=not self._progress_bar,
         )
 
         while page <= last_page:
@@ -219,10 +217,10 @@ class IntraAPIClient(object):
         return total
 
     def progress_disable(self):
-        self.__progress_bar = False
+        self._progress_bar = False
 
     def progress_enable(self):
-        self.__progress_bar = True
+        self._progress_bar = True
 
     def prompt(self):
         while 42:

@@ -1,6 +1,6 @@
 import odos
 
 if __name__ == "__main__":
-    odos.csv_read()
-    text = odos.print_loc()
-    odos.chat_message("독촉", text)
+    odos.read_and_write_csv()
+    text = odos.print_result()
+    # odos.chat_message("독촉", text)
