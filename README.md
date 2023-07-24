@@ -42,12 +42,12 @@
 |                             method                              |        스네이크         |      method_name()       |
 
 - 변수 종류
-  - 내부 변수(internal): 맨 앞 밑줄 하나
-    - _protected_attribute_name = 0
-    - `from Module import *` 했을 때, 가져오지 않는다.
-  - 숨은 변수(hidden): 맨 앞 밑줄 두 개
-    - __hidden_attribute_name = 0
-    - 클래스 속성들도 사용
+    - 내부 변수(internal): 맨 앞 밑줄 하나
+        - _protected_attribute_name = 0
+        - `from Module import *` 했을 때, 가져오지 않는다.
+    - 숨은 변수(hidden): 맨 앞 밑줄 두 개
+        - __hidden_attribute_name = 0
+        - 클래스 속성들도 사용
 
 - 자세한 건 [PEP8 Naming Conventions](https://peps.python.org/pep-0008/#naming-conventions) 참고
 
@@ -59,30 +59,31 @@
 
 ### version
 
-|    버전    |                          추가 기능                          | 삭제 기능 |
-|:--------:|:-------------------------------------------------------:|:-----:|
-| ver1.0.0 | - 출퇴근 및 현재 위치 확인<br/>- 연속으로 안 푼 날짜 체크<br/>-연속으로 푼 날짜 체크 |       |
+|       버전       |                          추가 기능                           |       삭제 기능        |
+|:--------------:|:--------------------------------------------------------:|:------------------:|
+|    ver1.0.0    | - 출퇴근 및 현재 위치 확인<br/>- 연속으로 안 푼 날짜 체크<br/>-연속으로 푼 날짜 체크  |                    |
+| ver1.1.0(beta) | - 블랙홀 날짜 추가<br/>- UI 개편<br/>- 웹 크롤링으로 방법 변경<br/>- 코드 객체화 | - solved.ac api 삭제 |
 
 ### 추후 업데이트 예정
 
-- solved.api 에러 시, 기존 csv 데이터 보존
-- 코드 객체화 시키기
-- 블랙홀 기간 추가
 - 11사이를 위한 기능 고안 및 제작
-- 앱...?
+- 앱
+- 자동화
 
 ### 나오는 내용
 
-- 본명과 인트라 id
-- 클러스터 출근 여부
-- 문제를 풀었는지 여부
+![display.png](img/display.png)
+
+- 이모지와 이름
+- 백준 랭크
 - 연속으로 풀지 않은 날짜 or 연속으로 푼 날짜
-- 백준 티어
+- 블랙홀 기간
+- 출퇴근 여부
 
 ### csv 인덱스
 
-| 이름 | intra id | 백준 id | 푼 전체 문제 수 | 확인한 최신 날짜 | 안 푼 날짜 | 백준 티어 | 연속으로 푼 날짜 |
-|:--:|:--------:|:-----:|:---------:|:---------:|:------:|:-----:|:---------:|
+| 이름 | intra id | baekjoon id | 연속으로 푼 문제 수 | 오늘 확인했는가 |
+|:--:|:--------:|:-----------:|:-----------:|:--------:|
 
 ### 구성원
 
@@ -112,6 +113,8 @@
 |  [suhbaek](https://profile.intra.42.fr/users/suhbaek)  |    [sbaek4908](https://solved.ac/ko/profile/sbaek4908)     |      [![github](img/github.svg)](https://github.com)       |    ![sbaek4908 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=sbaek4908)    |
 | [seonmiki](https://profile.intra.42.fr/users/seonmiki) |       [sunsky](https://solved.ac/ko/profile/sunsky)        |      [![github](img/github.svg)](https://github.com)       |       ![sunsky 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=sunsky)       |
 |   [eunson](https://profile.intra.42.fr/users/eunson)   |   [ebcode2021](https://solved.ac/ko/profile/ebcode2021)    |      [![github](img/github.svg)](https://github.com)       |   ![ebcode2021 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=ebcode2021)   |
+|    [yoahn](https://profile.intra.42.fr/users/yoahn)    |   [dudtjs0920](https://solved.ac/ko/profile/dudtjs0920)    |  [![github](img/github.svg)](https://github.com/AYoungSn)  |   ![ebcode2021 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=dudtjs0920)   |
+|      [tyi](https://profile.intra.42.fr/users/tyi)      |                                                            |      [![github](img/github.svg)](https://github.com)       |                                                                                    |
 
 # 참고
 
