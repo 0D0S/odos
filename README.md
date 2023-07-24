@@ -22,7 +22,7 @@
 
 ### commit message
 
-- 메세지는 [gitmoji](https://gitmoji.dev/) 활용
+- 메세지는 [gitmoji homepage](https://gitmoji.dev/)나 [GITMOJI.md](GITMOJI.md) 참고
 
 ### formatting
 
