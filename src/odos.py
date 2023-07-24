@@ -9,7 +9,7 @@ from Student import Student  # type: ignore
 from SolvedCrowling import SolvedCrawler
 
 
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(BASE_DIR)
 CSV_PATH = PARENT_DIR + "/doc/solved.csv"
 SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
