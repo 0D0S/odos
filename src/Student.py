@@ -66,7 +66,6 @@ class Student:  # type: ignore
         return self._baek_id
 
     def get_loc(self) -> str:
-        print(self._loc, type(self._loc))
         return self._loc
 
     def get_is_working(self) -> bool:
