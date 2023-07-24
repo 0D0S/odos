@@ -102,15 +102,15 @@ def print_result() -> str:
             if student.get_loc() == "null":
                 if student.get_is_working():
                     pos[key]["leave"].append(
-                        f"{student.get_name()} ( {student.get_rank()}  solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  퇴근함 )\n"
+                        f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  퇴근함 )\n"
                     )
                 else:
                     pos[key]["home"].append(
-                        f"{student.get_name()} ( {student.get_rank()}  solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  출근 안 함 )\n"
+                        f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  출근 안 함 )\n"
                     )
             else:
                 pos[key]["cluster"].append(
-                    f"{student.get_name()} ( {student.get_rank()}  solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  {student.get_loc()} )\n"
+                    f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  {student.get_loc()} )\n"
                 )
     if (
         len(pos["solved"]["cluster"])
@@ -122,7 +122,7 @@ def print_result() -> str:
             for t in v:
                 text += t
             if v:
-                text += "\n\n"
+                text += "\n"
     if (
         len(pos["unsolved"]["cluster"])
         + len(pos["unsolved"]["home"])
@@ -133,7 +133,7 @@ def print_result() -> str:
             for t in v:
                 text += t
             if v:
-                text += "\n\n"
+                text += "\n"
     if (
         len(pos["none_user"]["cluster"])
         + len(pos["none_user"]["home"])
@@ -144,8 +144,8 @@ def print_result() -> str:
             for t in v:
                 text += t
             if v:
-                text += "\n\n"
-    text += "\n:재권_공지: 하루 시작은 새벽 6시입니다. 백준 결과는 매일 21시에 제가 수동으로 올립니다. :재권_공지:\n\n"
+                text += "\n"
+    text += "\n:재권_공지: 하루 시작은 새벽 6시입니다. 백준 결과는 매일 21시에 제가 수동으로 올립니다. :재권_공지:\n"
     print(text)
     return text
 
