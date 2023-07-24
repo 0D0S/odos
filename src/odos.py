@@ -16,6 +16,7 @@ SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
 USERS: Dict[str, List] = {"solved": [], "unsolved": [], "none_user": []}
 TIER: Dict[str, str] = {
     "Unrated 9": "🖤 newbie",
+    "Unrated": "🖤 newbie",
     "Bronze V": "🤎 V",
     "Bronze IV": "🤎 IV",
     "Bronze III": "🤎 III",
@@ -63,24 +64,26 @@ def read_and_write_csv() -> None:
 def solved_crawler(rd) -> List[List]:
     context = []
     cral = SolvedCrawler()
-    for name, intra_id, baek_id, day in tqdm(
+    for name, intra_id, baek_id, day, flag in tqdm(
         rd, desc="진행도", total=25, ncols=70, ascii=" =", leave=True
     ):
         time.sleep(0.1)
         data = cral.get_info(baek_id)
-        if type(data) == type(int):
-            context.append([name, intra_id, baek_id, "0"])
-            USERS["none_user"].append(Student(name, intra_id, baek_id, "Unrated 9", 0))
+        if type(data) == int:
+            context.append([name, intra_id, baek_id, "0", "0"])
+            USERS["none_user"].append(
+                Student(name, intra_id, baek_id, TIER["Unrated 9"], 0)
+            )
         elif data[1] == 0:  # type: ignore
             i_day = -1 if int(day) > 0 else int(day) - 1
-            context.append([name, intra_id, baek_id, str(i_day)])
-            USERS["unsolved"].append(Student(name, intra_id, baek_id, data[0], i_day))  # type: ignore
-        elif data[1] == int(day):  # type: ignore
-            context.append([name, intra_id, baek_id, day])
-            USERS["unsolved"].append(Student(name, intra_id, baek_id, data[0], 0))  # type: ignore
+            context.append([name, intra_id, baek_id, str(i_day), "0"])
+            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], i_day))  # type: ignore
+        elif data[1] == int(day) and flag == "0":  # type: ignore
+            context.append([name, intra_id, baek_id, day, "0"])
+            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], 0))  # type: ignore
         elif data[1] > 0:  # type: ignore
-            context.append([name, intra_id, baek_id, str(data[1])])  # type: ignore
-            USERS["solved"].append(Student(name, intra_id, baek_id, data[0], data[1]))  # type: ignore
+            context.append([name, intra_id, baek_id, str(data[1]), "1"])  # type: ignore
+            USERS["solved"].append(Student(name, intra_id, baek_id, TIER[data[0]], data[1]))  # type: ignore
     return context
 
 
@@ -96,35 +99,38 @@ def print_result() -> str:
             if student.get_loc() == "null":
                 if student.get_is_working():
                     pos[key]["leave"].append(
-                        f"- {student.get_name()} (블랙홀: {student.get_blackhole()}, 퇴근함)\n"
+                        f"- {student.get_name()}(등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 퇴근함)\n"
                     )
                 else:
                     pos[key]["home"].append(
-                        f"- {student.get_name()} (블랙홀: {student.get_blackhole()}, 출근 안 함)\n"
+                        f"- {student.get_name()}(등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 출근 안 함)\n"
                     )
             else:
                 pos[key]["cluster"].append(
-                    f"- {student.get_name()} (블랙홀: {student.get_blackhole()}, 현재 위치: {student.get_loc()})\n"
+                    f"- {student.get_name()}(등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 현재 위치: {student.get_loc()})\n"
                 )
     if pos["solved"]:
         text += "\n😀푼 사람😀\n"
     for v in pos["solved"].values():
         for t in v:
             text += t
-        text += "\n"
+        if v:
+            text += "\n"
     if pos["unsolved"]:
         text += "\n😢안 푼 사람😢\n"
     for v in pos["unsolved"].values():
         for t in v:
             text += t
-        text += "\n"
+        if v:
+            text += "\n"
     if pos["none_user"]:
         text += "\n🙏 백준 아이디 알려 주고, solved.ac 동의 좀... 🙏\n"
     for v in pos["none_user"].values():
         for t in v:
             text += t
-        text += "\n"
-    text += "\n📢하루 시작은 새벽 6시입니다.\n📢"
+        if v:
+            text += "\n"
+    text += "\n📢하루 시작은 새벽 6시입니다.📢"
     print(text)
     return text
 
