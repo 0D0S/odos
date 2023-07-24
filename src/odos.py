@@ -75,8 +75,10 @@ def solved_crawler(rd) -> List[List]:
                 Student(name, intra_id, baek_id, TIER["Unrated 9"], 0)
             )
         elif data[1] == 0:  # type: ignore
-            i_day = -1 if int(day) > 0 else int(day) - 1
-            context.append([name, intra_id, baek_id, str(i_day), "0"])
+            i_day = int(day)
+            if flag == "0":
+                i_day = -1 if i_day > 0 else i_day - 1
+            context.append([name, intra_id, baek_id, str(i_day), "1"])
             USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], i_day))  # type: ignore
         elif data[1] == int(day) and flag == "0":  # type: ignore
             context.append([name, intra_id, baek_id, day, "0"])
@@ -96,18 +98,22 @@ def print_result() -> str:
     }
     for key, value in USERS.items():
         for student in value:
+            if student.get_day() > 0:
+                solve_text = str(student.get_day()) + "일 연속으로 푸는 중"
+            else:
+                solve_text = str(student.get_day() * -1) + "일 동안 안 푸는 중"
             if student.get_loc() == "null":
                 if student.get_is_working():
                     pos[key]["leave"].append(
-                        f"- {student.get_name()}(등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 퇴근함)\n"
+                        f"- {student.get_name()}({solve_text}, 등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 퇴근함)\n"
                     )
                 else:
                     pos[key]["home"].append(
-                        f"- {student.get_name()}(등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 출근 안 함)\n"
+                        f"- {student.get_name()}({solve_text}, 등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 출근 안 함)\n"
                     )
             else:
                 pos[key]["cluster"].append(
-                    f"- {student.get_name()}(등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 현재 위치: {student.get_loc()})\n"
+                    f"- {student.get_name()}({solve_text}, 등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 현재 위치: {student.get_loc()})\n"
                 )
     if (
         len(pos["solved"]["cluster"])
@@ -119,7 +125,7 @@ def print_result() -> str:
             for t in v:
                 text += t
             if v:
-                text += "\n"
+                text += "\n\n"
     if (
         len(pos["unsolved"]["cluster"])
         + len(pos["unsolved"]["home"])
@@ -130,7 +136,7 @@ def print_result() -> str:
             for t in v:
                 text += t
             if v:
-                text += "\n"
+                text += "\n\n"
     if (
         len(pos["none_user"]["cluster"])
         + len(pos["none_user"]["home"])
@@ -141,8 +147,8 @@ def print_result() -> str:
             for t in v:
                 text += t
             if v:
-                text += "\n"
-    text += "\n📢하루 시작은 새벽 6시입니다. 백준 결과는 매일 21시에 제가 수동으로 올립니다.📢"
+                text += "\n\n"
+    text += "\n:재권_공지: 하루 시작은 새벽 6시입니다. 백준 결과는 매일 21시에 제가 수동으로 올립니다. :재권_공지:"
     print(text)
     return text
 
