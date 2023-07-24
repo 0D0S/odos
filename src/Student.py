@@ -50,7 +50,7 @@ class Student:  # type: ignore
         """
         response = requests.get(URL42 + self._intra_id).json()  # 42 pear api 정보
         if not response["blackhole"]:  # 블랙홀 정보가 없으면 멤버
-            return "Infinity"
+            return "∞"
         date = response["blackhole"].split("T")[0]  # T 기준 앞쪽이 날짜
         date = list(map(int, date.split("-")))
         blackhole = datetime.date(date[0], date[1], date[2])
@@ -78,10 +78,10 @@ class Student:  # type: ignore
         return self._is_working
 
     def get_blackhole(self) -> str:
-        return self._blackhole
+        return f"{self._blackhole:>5}"
 
     def get_rank(self) -> str:
         return self._rank
 
-    def get_day(self) -> int:
-        return self._day
+    def get_day(self) -> str:
+        return f"{self._day:>5}"
