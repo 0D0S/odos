@@ -11,39 +11,6 @@ PARENT_DIR = os.path.dirname(BASE_DIR)
 CSV_PATH = PARENT_DIR + "/doc/solved.csv"
 SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
 USERS: List = []
-TIER: List[str] = [
-    "🖤 newbie",
-    "🤎 V",
-    "🤎 IV",
-    "🤎 III",
-    "🤎 II",
-    "🤎 I",
-    "🤍 V",
-    "🤍 IV",
-    "🤍 III",
-    "🤍 II",
-    "🤍 I",
-    "💛 V",
-    "💛 IV",
-    "💛 III",
-    "💛 II",
-    "💛 I",
-    "💙 V",
-    "💙 IV",
-    "💙 III",
-    "💙 II",
-    "💙 I",
-    "💎 V",
-    "💎 IV",
-    "💎 III",
-    "💎 II",
-    "💎 I",
-    "💖 V",
-    "💖 IV",
-    "💖 III",
-    "💖 II",
-    "💖 I",
-]
 
 
 def csv_read() -> None:
@@ -56,36 +23,38 @@ def csv_read() -> None:
 
 
 def print_loc() -> str:
-    text = f"⏰현재 시각: {datetime.datetime.now()}\n\n"  # 현재 시각
+    text = f":수빈: 현재 시각: {datetime.datetime.now()} :수빈:\n\n"  # 현재 시각
     pos: Dict[str, List[str]] = {"cluster": [], "home": [], "leave": []}
     for student in USERS:
         print(type(student.get_loc()), student.get_loc())
         if student.get_loc() == "null":
             if student.get_is_working():
                 pos["leave"].append(
-                    f"- {student.get_name()} (블랙홀 기간: {student.get_blackhole()}, 퇴근함)\n"
+                    f"{student.get_name()} ( 블랙홀: {student.get_blackhole()}  |  퇴근함)\n"
                 )
             else:
                 pos["home"].append(
-                    f"- {student.get_name()} (블랙홀 기간: {student.get_blackhole()}, 출근 안함)\n"
+                    f"{student.get_name()} ( 블랙홀: {student.get_blackhole()}  |  출근 안함 )\n"
                 )
         else:
             pos["cluster"].append(
-                f"- {student.get_name()} (블랙홀 기간: {student.get_blackhole()}, 현재 위치: {student.get_loc()})\n"
+                f"{student.get_name()} ( 블랙홀: {student.get_blackhole()}  |  {student.get_loc()} )\n"
             )
     if pos["cluster"]:
-        text += "🖥️ 아마 코딩 중 🖥️\n"
+        text += "\n<아마 코딩 중>\n"
     for t in pos["cluster"]:
         text += t
     if pos["leave"]:
-        text += "\n🛏️ 퇴근 or 클러스터 어딘가 💻\n"
+        text += "\n<퇴근 or 클러스터 어딘가>\n"
     for t in pos["leave"]:
         text += t
     if pos["home"]:
-        text += "\n🙏 출근 안함 or 노트북💻\n"
+        text += "\n<출근 안함 or 노트북>\n"
     for t in pos["home"]:
         text += t
-    text += "\n📢현재 저희 서버에 문제가 있습니다. 백준 문제 풀이는 21시에 수동으로 한 번 올라옵니다.\n📢블랙홀 기간은 조금의 차이가 있을 수 있습니다.\n"
+    text += (
+        "\n:재권_공지: 백준 문제 풀이는 21시에 수동으로 한 번 올라옵니다. 블랙홀 기간은 조금의 차이가 있을 수 있습니다. :재권_공지:\n"
+    )
     print(text)
     return text
 
