@@ -109,27 +109,39 @@ def print_result() -> str:
                 pos[key]["cluster"].append(
                     f"- {student.get_name()}(등급: {student.get_rank()}, 블랙홀: {student.get_blackhole()}, 현재 위치: {student.get_loc()})\n"
                 )
-    if pos["solved"]:
+    if (
+        len(pos["solved"]["cluster"])
+        + len(pos["solved"]["home"])
+        + len(pos["solved"]["leave"])
+    ):
         text += "\n😀푼 사람😀\n"
-    for v in pos["solved"].values():
-        for t in v:
-            text += t
-        if v:
-            text += "\n"
-    if pos["unsolved"]:
+        for v in pos["solved"].values():
+            for t in v:
+                text += t
+            if v:
+                text += "\n"
+    if (
+        len(pos["unsolved"]["cluster"])
+        + len(pos["unsolved"]["home"])
+        + len(pos["unsolved"]["leave"])
+    ):
         text += "\n😢안 푼 사람😢\n"
-    for v in pos["unsolved"].values():
-        for t in v:
-            text += t
-        if v:
-            text += "\n"
-    if pos["none_user"]:
+        for v in pos["unsolved"].values():
+            for t in v:
+                text += t
+            if v:
+                text += "\n"
+    if (
+        len(pos["none_user"]["cluster"])
+        + len(pos["none_user"]["home"])
+        + len(pos["none_user"]["leave"])
+    ):
         text += "\n🙏 백준 아이디 알려 주고, solved.ac 동의 좀... 🙏\n"
-    for v in pos["none_user"].values():
-        for t in v:
-            text += t
-        if v:
-            text += "\n"
+        for v in pos["none_user"].values():
+            for t in v:
+                text += t
+            if v:
+                text += "\n"
     text += "\n📢하루 시작은 새벽 6시입니다. 백준 결과는 매일 21시에 제가 수동으로 올립니다.📢"
     print(text)
     return text

@@ -18,7 +18,7 @@ class SlackAPI:
         result = self._client.conversations_list()
         # 채널 정보 딕셔너리 리스트
         channels = result.data["channels"]
-        # 채널 명이 'test'인 채널 딕셔너리 쿼리
+        # 채널 이름이 'test'인 채널 딕셔너리 쿼리
         channel = list(filter(lambda c: c["name"] == channel_name, channels))[0]
         # 채널ID 파싱
         channel_id = channel["id"]
