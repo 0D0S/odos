@@ -23,7 +23,7 @@ def csv_read() -> None:
 
 
 def print_loc() -> str:
-    text = f":수빈: 현재 시각: {datetime.datetime.now()} :수빈:\n\n"  # 현재 시각
+    text = f":수빈: 현재 시각 {datetime.datetime.now()} :수빈:\n\n"  # 현재 시각
     pos: Dict[str, List[str]] = {"cluster": [], "home": [], "leave": []}
     for student in USERS:
         print(type(student.get_loc()), student.get_loc())
