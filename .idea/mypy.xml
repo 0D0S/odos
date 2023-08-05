@@ -2,6 +2,5 @@
 <project version="4">
   <component name="MypyConfigService">
     <option name="customMypyPath" value="$PROJECT_DIR$/venv/bin/mypy" />
-    <option name="scanBeforeCheckin" value="true" />
   </component>
 </project>
