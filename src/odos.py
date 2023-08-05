@@ -1,13 +1,14 @@
-import os
 import csv
 import datetime
+import os
 import time
-from tqdm import tqdm
 from typing import List, Dict
-from SlackAPI import SlackAPI  # type: ignore
-from Student import Student  # type: ignore
-from SolvedCrowling import SolvedCrawler
 
+from tqdm import tqdm
+
+from SlackAPI import SlackAPI  # type: ignore
+from SolvedCrowling import SolvedCrawler
+from Student import Student  # type: ignore
 
 TOTAL = 26  # 전체 인원
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -80,7 +81,8 @@ def solved_crawler(rd) -> List[List]:
             if flag == "0":
                 i_day = -1 if i_day > 0 else i_day - 1
             context.append([name, intra_id, baek_id, str(i_day), "1"])
-            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], i_day))  # type: ignore
+            # TODO 나중에 마지막 인자 i_day로 수정할 것
+            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], 0))  # type: ignore
         elif data[1] == int(day) and flag == "0":  # type: ignore
             context.append([name, intra_id, baek_id, day, "0"])
             USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], 0))  # type: ignore
