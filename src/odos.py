@@ -63,6 +63,7 @@ def read_and_write_csv() -> None:
         wr.writerows(context)
 
 
+# TODO flag가 어제 선거면 다시 내려줘야 함
 def solved_crawler(rd) -> List[List]:
     context = []
     cral = SolvedCrawler()
