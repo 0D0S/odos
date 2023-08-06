@@ -13,8 +13,8 @@
 |✅|: white_check_mark :|테스트 추가/수정|Add or update tests.|
 |🔒|: lock :|보안 이슈 수정|Fix security issues.|
 |🔐|: closed_lock_with_key :|보안 사항 추가/수정|Add or update secrets.|
-|🔖|: bookmark :|릴리즈 / 버전 태그|Release / Version tags.|
-|🚨|: rotating_light :|컴파일러/링커 에러 수정|Fix compiler/linker warnings.|
+|🔖|: bookmark :|릴리즈/버전 태그|Release / Version tags.|
+|🚨|: rotating_light :|컴파일러/링커 에러 수정|Fix compiler / linker warnings.|
 |🚧|: construction :|작업 중|Work in progress.|
 |💚|: green_heart :|CI 빌드 수정|Fix CI Build.|
 |⬇️|: arrow_down :|의존성 다운그레이드|Downgrade dependencies.|
