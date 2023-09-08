@@ -15,6 +15,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(BASE_DIR)
 CSV_PATH = PARENT_DIR + "/doc/solved.csv"
 SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
+TODAY = (datetime.datetime.now() - datetime.timedelta(hours=6)).strftime("%Y-%m-%d")
 USERS: Dict[str, List] = {"solved": [], "unsolved": [], "none_user": []}
 TIER: Dict[str, str] = {
     "Unrated 9": ":unranked:",
@@ -63,33 +64,40 @@ def read_and_write_csv() -> None:
         wr.writerows(context)
 
 
-# TODO flag가 어제 선거면 다시 내려줘야 함
 def solved_crawler(rd) -> List[List]:
     context = []
     cral = SolvedCrawler()
-    for name, intra_id, baek_id, day, flag in tqdm(
+    for name, intra_id, baek_id, day, flag, date in tqdm(
         rd, desc="진행도", total=TOTAL, ncols=70, ascii=" =", leave=True
     ):
         time.sleep(0.1)
         data = cral.get_info(baek_id)
-        if type(data) == int:
+        if type(data) == int:  # solved.ac id가 없는 사람
             context.append([name, intra_id, baek_id, "0", "0"])
             USERS["none_user"].append(
                 Student(name, intra_id, baek_id, TIER["Unrated 9"], 0)
             )
-        elif data[1] == 0:  # type: ignore
+        elif date == TODAY and flag == "1":  # 이미 오늘 푼 사람
+            context.append([name, intra_id, baek_id, str(data[1]), "1", TODAY])
+            USERS["solved"].append(
+                Student(name, intra_id, baek_id, TIER[data[0]], data[1])
+            )
+        elif data[1] == 0:  # 연속으로 푼 문제가 없는 사람
             i_day = int(day)
-            if flag == "0":
+            if date != TODAY:
                 i_day = -1 if i_day > 0 else i_day - 1
-            context.append([name, intra_id, baek_id, str(i_day), "1"])
-            # TODO 나중에 마지막 인자 i_day로 수정할 것
-            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], 0))  # type: ignore
-        elif data[1] == int(day) and flag == "0":  # type: ignore
-            context.append([name, intra_id, baek_id, day, "0"])
-            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], 0))  # type: ignore
-        elif data[1] > 0:  # type: ignore
-            context.append([name, intra_id, baek_id, str(data[1]), "1"])  # type: ignore
-            USERS["solved"].append(Student(name, intra_id, baek_id, TIER[data[0]], data[1]))  # type: ignore
+            context.append([name, intra_id, baek_id, str(i_day), "0", TODAY])
+            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], i_day))  # type: ignore
+        elif data[1] == int(day) and flag == "0":  # 연속으로 푼 문제가 어제와 동일한 사람
+            context.append([name, intra_id, baek_id, day, "0", TODAY])
+            USERS["unsolved"].append(
+                Student(name, intra_id, baek_id, TIER[data[0]], i_day)
+            )
+        elif data[1] > int(day):  # 연속으로 푼 문제가 늘어난 사람
+            context.append([name, intra_id, baek_id, str(data[1]), "1", TODAY])
+            USERS["solved"].append(
+                Student(name, intra_id, baek_id, TIER[data[0]], data[1])
+            )
     return context
 
 

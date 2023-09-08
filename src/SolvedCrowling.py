@@ -1,11 +1,20 @@
-import requests
-from bs4 import BeautifulSoup
 from typing import Tuple
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class SolvedCrawler:
     def __init__(self):
         self._url = "https://solved.ac/profile/"
+        self._rank_xpath = "/html/body/div[1]/div[2]/div[2]/div[4]/span[2]/b"
+        self._day_xpath = (
+            "/html/body/div[1]/div[3]/div/div[4]/div[1]/div[2]/div[1]/div/div/b"
+        )
 
     def get_info(self, baek_id: str) -> Tuple[str, int] | int:
         """
@@ -14,18 +23,20 @@ class SolvedCrawler:
              tuple: rank와 day가 들어 있음
              int: 에러 코드가 들어 있음
         """
-        if baek_id == "  ":  # csv 빈 필드일 때
+        webdriver_service = Service("/home/myko/odos/chromedriver")
+        options = Options()
+        options.add_argument("--headless")  # 브라우저 창 숨기기
+
+        driver = webdriver.Chrome(service=webdriver_service, options=options)
+        driver.get(self._url + baek_id)
+
+        try:
+            wait = WebDriverWait(driver, 10)
+            wait.until(
+                EC.presence_of_element_located((By.XPATH, self._rank_xpath))
+            )  # 로딩까지 기다림
+            day = driver.find_element(By.XPATH, self._day_xpath).text
+            rank = driver.find_element(By.XPATH, self._rank_xpath).text
+            return rank, int(day)
+        except:
             return -1
-        response = requests.get(self._url + baek_id)
-        if response.status_code == 200:
-            html = response.text
-            soup = BeautifulSoup(html, "html.parser")
-            data = soup.find_all("div", {"class": "css-1midmz7"})
-            try:
-                rank = data[0].find("span").get_text()
-                day = data[1].find("b").get_text()
-                return rank, int(day)
-            except IndexError:
-                return response.status_code
-        else:
-            return response.status_code
