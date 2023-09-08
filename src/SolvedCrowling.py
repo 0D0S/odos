@@ -33,7 +33,7 @@ class SolvedCrawler:
         driver.get(self._url + baek_id)
 
         try:
-            wait = WebDriverWait(driver, 10)
+            wait = WebDriverWait(driver, 5)
             wait.until(
                 EC.presence_of_element_located((By.XPATH, self._rank_xpath))
             )  # 로딩까지 기다림

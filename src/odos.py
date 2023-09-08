@@ -73,7 +73,7 @@ def solved_crawler(rd) -> List[List]:
         time.sleep(0.1)
         data = cral.get_info(baek_id)
         if type(data) == int:  # solved.ac id가 없는 사람
-            context.append([name, intra_id, baek_id, "0", "0"])
+            context.append([name, intra_id, baek_id, "0", "0", TODAY])
             USERS["none_user"].append(
                 Student(name, intra_id, baek_id, TIER["Unrated 9"], 0)
             )
