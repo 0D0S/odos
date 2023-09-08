@@ -7,6 +7,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from odos import PARENT_DIR
+
 
 class SolvedCrawler:
     def __init__(self):
@@ -23,7 +25,7 @@ class SolvedCrawler:
              tuple: rank와 day가 들어 있음
              int: 에러 코드가 들어 있음
         """
-        webdriver_service = Service("/home/myko/odos/chromedriver")
+        webdriver_service = Service(PARENT_DIR + "/chromedriver")
         options = Options()
         options.add_argument("--headless")  # 브라우저 창 숨기기
 
