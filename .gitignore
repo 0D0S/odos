@@ -279,5 +279,6 @@ cython_debug/
 **/config.yml
 **/token.txt
 **/slack_token.txt
+chromedriver
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,python
