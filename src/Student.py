@@ -3,8 +3,6 @@ from typing import Tuple
 
 from Intra import ic  # type: ignore
 
-URL42 = "https://api.evaluation.42seoul.link/user/"  # 42pear 홈페이지 주소
-
 
 class Student:  # type: ignore
     def __init__(self, name: str, intra_id: str, baek_id: str) -> None:
@@ -12,7 +10,7 @@ class Student:  # type: ignore
         self.__intra_id: str = intra_id  # 42seoul 인트라 아이디
         self.__baek_id: str = baek_id  # 백준 아이디
         self.__loc, self._is_working = self._get_location()  # 클러스터 위치, 출퇴근 여부
-        self.__blackhole: str = self._cal_blackhole()  # 남은 블랙홀 기간
+        self.__blackhole: str = "NULL"  # 남은 블랙홀 기간
 
     def _get_location(self) -> Tuple[str, bool]:
         """
@@ -38,21 +36,6 @@ class Student:  # type: ignore
         cluster = True if last_time >= now_day else False  # 최근 맥 로그인 시간이 오늘이면 1, 아니면 0
         return (loc, cluster) if loc else ("null", cluster)
 
-    def _cal_blackhole(self) -> str:
-        """
-        블랙홀 기간을 구하는 함수
-        Returns:
-            남은 블랙홀 일 수
-        """
-        return "지금 안 됨"
-        # response = requests.get(URL42 + self.__intra_id).json()  # 42 pear api 정보
-        # if not response["blackhole"]:  # 블랙홀 정보가 없으면 멤버
-        #     return "∞"
-        # date = response["blackhole"].split("T")[0]  # T 기준 앞쪽이 날짜
-        # date = list(map(int, date.split("-")))
-        # blackhole = datetime.date(date[0], date[1], date[2])
-        # return str((blackhole - datetime.date.today()).days + 1)
-
     def get_name(self) -> str:
         return self.__name
 
@@ -76,3 +59,6 @@ class Student:  # type: ignore
 
     def get_blackhole(self) -> str:
         return self.__blackhole
+
+    def set_blackhole(self, blackhole: str) -> None:
+        self.__blackhole = "∞" if blackhole == "" else blackhole

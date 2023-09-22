@@ -1,25 +1,58 @@
-import os
 import csv
 import datetime
+import os
 from typing import List, Dict
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
 from SlackAPI import SlackAPI  # type: ignore
 from Student import Student  # type: ignore
-
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(BASE_DIR)
 CSV_PATH = PARENT_DIR + "/doc/solved.csv"
 SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
+XPATH = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
 USERS: List = []
 
 
 def csv_read() -> None:
+    with open(PARENT_DIR + "/doc/42intra.txt", "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    name = lines[0].strip()
+    pwd = lines[1].strip()
+
+    service = Service(PARENT_DIR + "/chromedriver")
+    option = Options()
+    option.add_argument("--headless")
+    driver = webdriver.Chrome(service=service, options=option)
+    driver.get("https://profile.intra.42.fr/users")
+    driver.find_element(By.ID, "username").send_keys(name)
+    driver.find_element(By.ID, "password").send_keys(pwd)
+    driver.find_element(By.ID, "kc-login").click()
+    wait = WebDriverWait(driver, 10)
+
     with open(CSV_PATH, "r", encoding="utf-8") as f:
         rd = csv.reader(f)
         if not rd:
             return
         for name, intra_id, baek_id in rd:
             USERS.append(Student(name, intra_id, baek_id))
+            driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
+            wait.until(EC.presence_of_element_located((By.XPATH, XPATH)))  # 로딩까지 기다림
+            blackhole = driver.find_element(By.XPATH, XPATH).text
+            try:
+                blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
+                blackhole = blackhole - datetime.datetime.now()
+                USERS[-1].set_blackhole(str(blackhole.days + 1))
+            except ValueError:
+                USERS[-1].set_blackhole(blackhole)
+    driver.quit()
 
 
 def print_loc() -> str:
