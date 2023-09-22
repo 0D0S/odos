@@ -35,7 +35,7 @@ def csv_read() -> None:
     driver.find_element(By.ID, "username").send_keys(name)
     driver.find_element(By.ID, "password").send_keys(pwd)
     driver.find_element(By.ID, "kc-login").click()
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
 
     with open(CSV_PATH, "r", encoding="utf-8") as f:
         rd = csv.reader(f)
