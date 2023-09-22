@@ -1,7 +1,7 @@
-import requests
 import datetime
-from Intra import ic  # type: ignore
 from typing import Tuple
+
+from Intra import ic  # type: ignore
 
 URL42 = "https://api.evaluation.42seoul.link/user/"  # 42pear 홈페이지 주소
 
@@ -44,13 +44,14 @@ class Student:  # type: ignore
         Returns:
             남은 블랙홀 일 수
         """
-        response = requests.get(URL42 + self.__intra_id).json()  # 42 pear api 정보
-        if not response["blackhole"]:  # 블랙홀 정보가 없으면 멤버
-            return "∞"
-        date = response["blackhole"].split("T")[0]  # T 기준 앞쪽이 날짜
-        date = list(map(int, date.split("-")))
-        blackhole = datetime.date(date[0], date[1], date[2])
-        return str((blackhole - datetime.date.today()).days + 1)
+        return "지금 안 됨"
+        # response = requests.get(URL42 + self.__intra_id).json()  # 42 pear api 정보
+        # if not response["blackhole"]:  # 블랙홀 정보가 없으면 멤버
+        #     return "∞"
+        # date = response["blackhole"].split("T")[0]  # T 기준 앞쪽이 날짜
+        # date = list(map(int, date.split("-")))
+        # blackhole = datetime.date(date[0], date[1], date[2])
+        # return str((blackhole - datetime.date.today()).days + 1)
 
     def get_name(self) -> str:
         return self.__name
