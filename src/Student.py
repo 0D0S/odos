@@ -1,20 +1,24 @@
-import requests
 import datetime
-from Intra import ic  # type: ignore
 from typing import Tuple
 
-URL42 = "https://api.evaluation.42seoul.link/user/"  # 42pear 홈페이지 주소
+from Intra import ic  # type: ignore
 
 
 class Student:  # type: ignore
     def __init__(
-        self, name: str, intra_id: str, baek_id: str, rank: str, day: int
+        self,
+        name: str,
+        intra_id: str,
+        baek_id: str,
+        rank: str,
+        day: int,
+        blackhole: str,
     ) -> None:
         self._name: str = name  # 별명이 포함된 이름
         self._intra_id: str = intra_id  # 42seoul 인트라 아이디
         self._baek_id: str = baek_id  # 백준 아이디
         self._loc, self._is_working = self._get_location()  # 클러스터 위치, 출퇴근 여부
-        self._blackhole: str = self._cal_blackhole()  # 남은 블랙홀 기간
+        self._blackhole: str = "∞" if blackhole == "" else blackhole  # 남은 블랙홀 기간
         self._rank: str = rank  # 백준 랭크
         self._day: int = day  # 연속으로 문제 푼 일 수
 
@@ -41,20 +45,6 @@ class Student:  # type: ignore
         )
         cluster = True if last_time >= now_day else False  # 최근 맥 로그인 시간이 오늘이면 1, 아니면 0
         return (loc, cluster) if loc else ("null", cluster)
-
-    def _cal_blackhole(self) -> str:
-        """
-        블랙홀 기간을 구하는 함수
-        Returns:
-            남은 블랙홀 일 수
-        """
-        response = requests.get(URL42 + self._intra_id).json()  # 42 pear api 정보
-        if not response["blackhole"]:  # 블랙홀 정보가 없으면 멤버
-            return "∞"
-        date = response["blackhole"].split("T")[0]  # T 기준 앞쪽이 날짜
-        date = list(map(int, date.split("-")))
-        blackhole = datetime.date(date[0], date[1], date[2])
-        return str((blackhole - datetime.date.today()).days + 1)
 
     def get_name(self) -> str:
         return self._name
