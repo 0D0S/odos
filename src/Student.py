@@ -61,4 +61,4 @@ class Student:  # type: ignore
         return self.__blackhole
 
     def set_blackhole(self, blackhole: str) -> None:
-        self.__blackhole = "∞" if blackhole == "" else blackhole
+        self.__blackhole = blackhole

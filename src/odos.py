@@ -17,7 +17,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(BASE_DIR)
 CSV_PATH = PARENT_DIR + "/doc/solved.csv"
 SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
-XPATH = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
+GRADE_XPATH = (
+    "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[1]/div[5]/span[2]"
+)
+BLACKHOLE_XPATH = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
 USERS: List = []
 
 
@@ -35,7 +38,7 @@ def csv_read() -> None:
     driver.find_element(By.ID, "username").send_keys(name)
     driver.find_element(By.ID, "password").send_keys(pwd)
     driver.find_element(By.ID, "kc-login").click()
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 100)
 
     with open(CSV_PATH, "r", encoding="utf-8") as f:
         rd = csv.reader(f)
@@ -44,14 +47,25 @@ def csv_read() -> None:
         for name, intra_id, baek_id in rd:
             USERS.append(Student(name, intra_id, baek_id))
             driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
-            wait.until(EC.presence_of_element_located((By.XPATH, XPATH)))  # 로딩까지 기다림
-            blackhole = driver.find_element(By.XPATH, XPATH).text
+            wait.until(
+                EC.presence_of_element_located((By.XPATH, BLACKHOLE_XPATH))
+            )  # 로딩까지 기다림
+            blackhole = driver.find_element(By.XPATH, BLACKHOLE_XPATH).text
+            grade = driver.find_element(By.XPATH, GRADE_XPATH).text
             try:
                 blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
                 blackhole = blackhole - datetime.datetime.now()
                 USERS[-1].set_blackhole(str(blackhole.days + 1))
             except ValueError:
-                USERS[-1].set_blackhole(blackhole)
+                if blackhole == "":
+                    if grade == "Learner":
+                        USERS[-1].set_blackhole("Not found")
+                    elif grade == "Member":
+                        USERS[-1].set_blackhole("∞")
+                    elif grade == "Novice":
+                        USERS[-1].set_blackhole("Piscine")
+                else:
+                    USERS[-1].set_blackhole(blackhole)
     driver.quit()
 
 
