@@ -38,7 +38,7 @@ def csv_read() -> None:
     driver.find_element(By.ID, "username").send_keys(name)
     driver.find_element(By.ID, "password").send_keys(pwd)
     driver.find_element(By.ID, "kc-login").click()
-    wait = WebDriverWait(driver, 100)
+    wait = WebDriverWait(driver, 10)
 
     with open(CSV_PATH, "r", encoding="utf-8") as f:
         rd = csv.reader(f)
@@ -48,10 +48,16 @@ def csv_read() -> None:
             USERS.append(Student(name, intra_id, baek_id))
             driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
             wait.until(
-                EC.presence_of_element_located((By.XPATH, BLACKHOLE_XPATH))
+                ec.presence_of_element_located((by.xpath, blackhole_xpath))
             )  # 로딩까지 기다림
-            blackhole = driver.find_element(By.XPATH, BLACKHOLE_XPATH).text
+            blackhole = driver.find_element(by.xpath, blackhole_xpath).text
             grade = driver.find_element(By.XPATH, GRADE_XPATH).text
+            if blackhole == "" and grade == "Learner":
+                driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
+                wait.until(
+                    ec.presence_of_element_located((by.xpath, blackhole_xpath))
+                )  # 로딩까지 기다림
+                blackhole = driver.find_element(by.xpath, blackhole_xpath).text
             try:
                 blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
                 blackhole = blackhole - datetime.datetime.now()
