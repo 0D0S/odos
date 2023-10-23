@@ -48,16 +48,16 @@ def csv_read() -> None:
             USERS.append(Student(name, intra_id, baek_id))
             driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
             wait.until(
-                ec.presence_of_element_located((by.xpath, blackhole_xpath))
+                EC.presence_of_element_located((By.XPATH, BLACKHOLE_XPATH))
             )  # 로딩까지 기다림
-            blackhole = driver.find_element(by.xpath, blackhole_xpath).text
+            blackhole = driver.find_element(By.XPATH, BLACKHOLE_XPATH).text
             grade = driver.find_element(By.XPATH, GRADE_XPATH).text
             if blackhole == "" and grade == "Learner":
                 driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
                 wait.until(
-                    ec.presence_of_element_located((by.xpath, blackhole_xpath))
+                    EC.presence_of_element_located((By.XPATH, BLACKHOLE_XPATH))
                 )  # 로딩까지 기다림
-                blackhole = driver.find_element(by.xpath, blackhole_xpath).text
+                blackhole = driver.find_element(By.XPATH, BLACKHOLE_XPATH).text
             try:
                 blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
                 blackhole = blackhole - datetime.datetime.now()
