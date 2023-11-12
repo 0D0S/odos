@@ -2,21 +2,19 @@
 
 ## 팀 소개
 
-### 팀 구성
+### 팀원
 
-|   직책   | 이름  |        한마디         |
-|:------:|:---:|:------------------:|
-|   팀장   | 이수빈 | **당연히 뒷처리는 팀원의 몫** |
-| 초기 개발자 | 고명준 | **팀장님이 알아서 해주실거야** |
-|  바지사장  | 이원진 |     **퇴사 준비중**     |
-|  대통령   | 정주영 |    **절 뽑아주십쇼**     |
-|   실세   | 정다인 |     **막내 온 탑**     |
-
-### 팀 규칙
-
-- 자율출퇴근제
-- 들어오는 건 자유지만 퇴사는 없음!
-- 금지 단어: 팀장님, 역시
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/subillie"><img src="https://avatars.githubusercontent.com/u/112736264?v=4"width="100px;" alt=""/><br /><sub><b>이수빈</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/Kdelphinus"><img src="https://avatars.githubusercontent.com/u/68101516?v=4" width="100px;" alt=""/><br /><sub><b>고명준</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/inwoo0115"><img src="https://avatars.githubusercontent.com/u/88661835?v=4" width="100px;" alt=""/><br /><sub><b>이원진</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/wdd1016"><img src="https://avatars.githubusercontent.com/u/41848796?v=4" width="100px;" alt=""/><br /><sub><b>정주영</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/Wilbur0306"><img src="https://avatars.githubusercontent.com/u/95270655?v=4" width="100px;" alt=""/><br /><sub><b>정다인</b></sub></a><br /></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Convention
 
