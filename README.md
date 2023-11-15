@@ -57,16 +57,15 @@
 
 ### version
 
-|       버전       |                          추가 기능                           |       삭제 기능        |
-|:--------------:|:--------------------------------------------------------|:------------------|
-|    ver1.0.0    | - 출퇴근 및 현재 위치 확인<br/>- 연속으로 안 푼 날짜 체크<br/>-연속으로 푼 날짜 체크  |                    |
-| ver1.1.0(beta) | - 블랙홀 날짜 추가<br/>- UI 개편<br/>- 웹 크롤링으로 방법 변경<br/>- 코드 객체화 | - solved.ac api 삭제 |
+|    버전    | 추가 기능                                                               | 삭제 기능 |
+|:--------:|:--------------------------------------------------------------------|:------|
+| ver1.0.0 | - 출퇴근 및 현재 위치 확인<br/>- 연속으로 안 푼 날짜 체크<br/>-연속으로 푼 날짜 체크             |       |
+| ver1.1.0 | - 블랙홀 날짜 추가<br/>- UI 개편<br/>- 웹 크롤링 & API 사용<br/>- 코드 객체화<br/>- 자동화 |       |
 
 ### 추후 업데이트 예정
 
 - 11사이를 위한 기능 고안 및 제작
 - 앱
-- 자동화
 
 ### 나오는 내용
 
@@ -112,7 +111,8 @@
 | [seonmiki](https://profile.intra.42.fr/users/seonmiki) |       [sunsky](https://solved.ac/ko/profile/sunsky)        |      [![github](img/github.svg)](https://github.com)       |       ![sunsky 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=sunsky)       |
 |   [eunson](https://profile.intra.42.fr/users/eunson)   |   [ebcode2021](https://solved.ac/ko/profile/ebcode2021)    |      [![github](img/github.svg)](https://github.com)       |   ![ebcode2021 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=ebcode2021)   |
 |    [yoahn](https://profile.intra.42.fr/users/yoahn)    |   [dudtjs0920](https://solved.ac/ko/profile/dudtjs0920)    |  [![github](img/github.svg)](https://github.com/AYoungSn)  |   ![ebcode2021 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=dudtjs0920)   |
-|      [tyi](https://profile.intra.42.fr/users/tyi)      |                                                            |      [![github](img/github.svg)](https://github.com)       |                                                                                    |
+|      [tyi](https://profile.intra.42.fr/users/tyi)      |    [seizediem](https://solved.ac/ko/profile/seizediem)     |      [![github](img/github.svg)](https://github.com)       |    ![seizediem 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=seizediem)    |
+|   [jeongble](https://profile.intra.42.fr/users/tyi)    |     [arat5724](https://solved.ac/ko/profile/arat5724)      |      [![github](img/github.svg)](https://github.com)       |     ![arat5724 백준](http://mazassumnida.wtf/api/v2/generate_badge?boj=arat5724)     |
 
 # 참고
 
