@@ -18,7 +18,7 @@ class Student:  # type: ignore
         self._intra_id: str = intra_id  # 42seoul 인트라 아이디
         self._baek_id: str = baek_id  # 백준 아이디
         self._loc, self._is_working = self._get_location()  # 클러스터 위치, 출퇴근 여부
-        self._blackhole: str = "∞" if blackhole == "" else blackhole  # 남은 블랙홀 기간
+        self._blackhole: str = blackhole  # 남은 블랙홀 기간
         self._rank: str = rank  # 백준 랭크
         self._day: int = day  # 연속으로 문제 푼 일 수
 
