@@ -57,13 +57,13 @@ def read_and_write_csv() -> None:
         rd = csv.reader(f)
         if not rd:
             return
-        context = solved_and_blackhole_crawler(rd, len(list(rd)))
+        context = solved_and_blackhole_crawler(list(rd))
     with open(CSV_PATH, "w", newline="", encoding="utf-8") as f:
         wr = csv.writer(f)
         wr.writerows(context)
 
 
-def solved_and_blackhole_crawler(rd, total: int) -> List[List]:
+def solved_and_blackhole_crawler(rd: list) -> List[List]:
     context = []
 
     with open(PARENT_DIR + "/doc/42intra.txt", "r", encoding="utf-8") as f:
@@ -73,14 +73,11 @@ def solved_and_blackhole_crawler(rd, total: int) -> List[List]:
 
     cral = Crawler(name, pwd)
     for name, intra_id, baek_id, day, count, flag, date in tqdm(
-        rd, desc="진행도", total=total, ncols=70, ascii=" =", leave=True
+        rd, desc="진행도", total=len(rd), ncols=70, ascii=" =", leave=True
     ):
         time.sleep(0.1)
-        print("in")
         blackhole = cral.get_blackhole(intra_id)
-        print("blackhole", blackhole)
         data = cral.get_info(baek_id)
-        print("data", data)
         if type(data) is int:  # solved.ac id가 없는 사람
             context.append([name, intra_id, baek_id, "0", "0", "0", TODAY])
             USERS["none_user"].append(
@@ -98,15 +95,11 @@ def solved_and_blackhole_crawler(rd, total: int) -> List[List]:
             i_day = int(day)
             if date != TODAY:
                 i_day = 0 if int(day) >= 0 else int(day) - 1
-            context.append(
-                [name, intra_id, baek_id, str(i_day), str(solved_count), "0", TODAY]
-            )
+            context.append([name, intra_id, baek_id, i_day, solved_count, "0", TODAY])
             USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[rank], i_day, blackhole))  # type: ignore
         elif int(count) < solved_count:  # 오늘 푼 사람
             i_day = int(day) + 1 if int(day) > 0 else 1
-            context.append(
-                [name, intra_id, baek_id, str(i_day), str(solved_count), "1", TODAY]
-            )
+            context.append([name, intra_id, baek_id, i_day, solved_count, "1", TODAY])
             USERS["solved"].append(
                 Student(name, intra_id, baek_id, TIER[rank], i_day, blackhole)
             )

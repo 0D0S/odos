@@ -27,6 +27,9 @@ class Crawler:
         self.driver.find_element(By.ID, "kc-login").click()
         self.wait = WebDriverWait(self.driver, 10)
 
+    def __del__(self):
+        self.driver.quit()
+
     def get_blackhole(self, intra_id: str) -> str:
         """
         blackhole을 반환하는 함수
