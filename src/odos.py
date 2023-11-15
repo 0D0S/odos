@@ -4,60 +4,52 @@ import os
 import time
 from typing import List, Dict
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from tqdm import tqdm
 
+from Crawler import Crawler
 from SlackAPI import SlackAPI  # type: ignore
-from SolvedCrowling import SolvedCrawler
 from Student import Student  # type: ignore
 
-TOTAL = 26  # 전체 인원
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(BASE_DIR)
 CSV_PATH = PARENT_DIR + "/doc/solved.csv"
+
 SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
-XPATH = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
 TODAY = (datetime.datetime.now() - datetime.timedelta(hours=6)).strftime("%Y-%m-%d")
 USERS: Dict[str, List] = {"solved": [], "unsolved": [], "none_user": []}
-TIER: Dict[str, str] = {
-    "Unrated 9": ":unranked:",
-    "Unrated": ":unranked:",
-    "Bronze V": ":bronze5:",
-    "Bronze IV": ":bronze4:",
-    "Bronze III": ":bronze3:",
-    "Bronze II": ":bronze2:",
-    "Bronze I": ":bronze1:",
-    "Silver V": ":silver5:",
-    "Silver IV": ":silver4:",
-    "Silver III": ":silver3:",
-    "Silver II": ":silver2:",
-    "Silver I": ":silver1:",
-    "Gold V": ":gold5:",
-    "Gold IV": ":gold4:",
-    "Gold III": ":gold3:",
-    "Gold II": ":gold2:",
-    "Gold I": ":gold1:",
-    "Platinum V": ":platinum5:",
-    "Platinum IV": ":platinum4:",
-    "Platinum III": ":platinum3:",
-    "Platinum II": ":platinum2:",
-    "Platinum I": ":platinum1:",
-    "Diamond V": ":diamond5:",
-    "Diamond IV": ":diamond4:",
-    "Diamond III": ":diamond3:",
-    "Diamond II": ":diamond2:",
-    "Diamond I": ":diamond1:",
-    "Ruby V": ":ruby5:",
-    "Ruby IV": ":ruby4:",
-    "Ruby III": ":ruby3:",
-    "Ruby II": ":ruby2:",
-    "Ruby I": ":ruby1:",
-}
+TIER: List = [
+    ":unranked:",
+    ":bronze5:",
+    ":bronze4:",
+    ":bronze3:",
+    ":bronze2:",
+    ":bronze1:",
+    ":silver5:",
+    ":silver4:",
+    ":silver3:",
+    ":silver2:",
+    ":silver1:",
+    ":gold5:",
+    ":gold4:",
+    ":gold3:",
+    ":gold2:",
+    ":gold1:",
+    ":platinum5:",
+    ":platinum4:",
+    ":platinum3:",
+    ":platinum2:",
+    ":platinum1:",
+    ":diamond5:",
+    ":diamond4:",
+    ":diamond3:",
+    ":diamond2:",
+    ":diamond1:",
+    ":ruby5:",
+    ":ruby4:",
+    ":ruby3:",
+    ":ruby2:",
+    ":ruby1:",
+]
 
 
 def read_and_write_csv() -> None:
@@ -65,74 +57,59 @@ def read_and_write_csv() -> None:
         rd = csv.reader(f)
         if not rd:
             return
-        context = solved_and_blackhole_crawler(rd)
+        context = solved_and_blackhole_crawler(rd, len(list(rd)))
     with open(CSV_PATH, "w", newline="", encoding="utf-8") as f:
         wr = csv.writer(f)
         wr.writerows(context)
 
 
-def solved_and_blackhole_crawler(rd) -> List[List]:
+def solved_and_blackhole_crawler(rd, total: int) -> List[List]:
     context = []
-    cral = SolvedCrawler()
 
     with open(PARENT_DIR + "/doc/42intra.txt", "r", encoding="utf-8") as f:
         lines = f.readlines()
     name = lines[0].strip()
     pwd = lines[1].strip()
 
-    service = Service(PARENT_DIR + "/chromedriver")
-    option = Options()
-    option.add_argument("--headless")
-    driver = webdriver.Chrome(service=service, options=option)
-    driver.get("https://profile.intra.42.fr/users")
-    driver.find_element(By.ID, "username").send_keys(name)
-    driver.find_element(By.ID, "password").send_keys(pwd)
-    driver.find_element(By.ID, "kc-login").click()
-    wait = WebDriverWait(driver, 10)
-
-    for name, intra_id, baek_id, day, flag, date in tqdm(
-        rd, desc="진행도", total=TOTAL, ncols=70, ascii=" =", leave=True
+    cral = Crawler(name, pwd)
+    for name, intra_id, baek_id, day, count, flag, date in tqdm(
+        rd, desc="진행도", total=total, ncols=70, ascii=" =", leave=True
     ):
         time.sleep(0.1)
-
-        driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
-        wait.until(EC.presence_of_element_located((By.XPATH, XPATH)))  # 로딩까지 기다림
-        blackhole = driver.find_element(By.XPATH, XPATH).text
-        try:
-            blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
-            blackhole = blackhole - datetime.datetime.now()
-            blackhole = str(blackhole.days + 1)
-        except ValueError:
-            pass
-
+        print("in")
+        blackhole = cral.get_blackhole(intra_id)
+        print("blackhole", blackhole)
         data = cral.get_info(baek_id)
-        if type(data) == int:  # solved.ac id가 없는 사람
-            context.append([name, intra_id, baek_id, "0", "0", TODAY])
+        print("data", data)
+        if type(data) is int:  # solved.ac id가 없는 사람
+            context.append([name, intra_id, baek_id, "0", "0", "0", TODAY])
             USERS["none_user"].append(
-                Student(name, intra_id, baek_id, TIER["Unrated 9"], 0, blackhole)
+                Student(name, intra_id, baek_id, TIER[0], 0, blackhole)
             )
-        elif date == TODAY and flag == "1":  # 이미 오늘 푼 사람
-            context.append([name, intra_id, baek_id, str(data[1]), "1", TODAY])
+            continue
+
+        rank, solved_count = data
+        if date == TODAY and flag == "1":  # 이미 오늘 푼 사람
+            context.append([name, intra_id, baek_id, day, count, flag, TODAY])
             USERS["solved"].append(
-                Student(name, intra_id, baek_id, TIER[data[0]], data[1], blackhole)
+                Student(name, intra_id, baek_id, TIER[rank], solved_count, blackhole)
             )
-        elif data[1] == 0:  # 연속으로 푼 문제가 없는 사람
+        elif int(count) >= solved_count:  # 안 푼 사람
             i_day = int(day)
             if date != TODAY:
-                i_day = -1 if i_day > 0 else i_day - 1
-            context.append([name, intra_id, baek_id, str(i_day), "0", TODAY])
-            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[data[0]], i_day, blackhole))  # type: ignore
-        elif data[1] == int(day) and flag == "0":  # 연속으로 푼 문제가 어제와 동일한 사람
-            context.append([name, intra_id, baek_id, day, "0", TODAY])
-            USERS["unsolved"].append(
-                Student(name, intra_id, baek_id, TIER[data[0]], i_day, blackhole)
+                i_day = 0 if int(day) >= 0 else int(day) - 1
+            context.append(
+                [name, intra_id, baek_id, str(i_day), str(solved_count), "0", TODAY]
             )
-        elif data[1] > int(day):  # 연속으로 푼 문제가 늘어난 사람
-            context.append([name, intra_id, baek_id, str(data[1]), "1", TODAY])
+            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[rank], i_day, blackhole))  # type: ignore
+        elif int(count) < solved_count:  # 오늘 푼 사람
+            i_day = int(day) + 1 if int(day) > 0 else 1
+            context.append(
+                [name, intra_id, baek_id, str(i_day), str(solved_count), "1", TODAY]
+            )
             USERS["solved"].append(
-                Student(name, intra_id, baek_id, TIER[data[0]], data[1], blackhole)
+                Student(name, intra_id, baek_id, TIER[rank], i_day, blackhole)
             )
-    driver.quit()
     return context
 
 
