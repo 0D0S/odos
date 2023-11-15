@@ -1,113 +1,167 @@
 import csv
 import datetime
 import os
+import time
 from typing import List, Dict
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from tqdm import tqdm
 
+from Crawler import Crawler
 from SlackAPI import SlackAPI  # type: ignore
 from Student import Student  # type: ignore
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(BASE_DIR)
 CSV_PATH = PARENT_DIR + "/doc/solved.csv"
+
 SLACK_TOKEN_PATH = PARENT_DIR + "/doc/slack_token.txt"
-GRADE_XPATH = (
-    "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[1]/div[5]/span[2]"
-)
-BLACKHOLE_XPATH = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
-USERS: List = []
+TODAY = (datetime.datetime.now() - datetime.timedelta(hours=6)).strftime("%Y-%m-%d")
+USERS: Dict[str, List] = {"solved": [], "unsolved": [], "none_user": []}
+TIER: List = [
+    ":unranked:",
+    ":bronze5:",
+    ":bronze4:",
+    ":bronze3:",
+    ":bronze2:",
+    ":bronze1:",
+    ":silver5:",
+    ":silver4:",
+    ":silver3:",
+    ":silver2:",
+    ":silver1:",
+    ":gold5:",
+    ":gold4:",
+    ":gold3:",
+    ":gold2:",
+    ":gold1:",
+    ":platinum5:",
+    ":platinum4:",
+    ":platinum3:",
+    ":platinum2:",
+    ":platinum1:",
+    ":diamond5:",
+    ":diamond4:",
+    ":diamond3:",
+    ":diamond2:",
+    ":diamond1:",
+    ":ruby5:",
+    ":ruby4:",
+    ":ruby3:",
+    ":ruby2:",
+    ":ruby1:",
+]
 
 
-def csv_read() -> None:
+def read_and_write_csv() -> None:
+    with open(CSV_PATH, "r", encoding="utf-8") as f:
+        rd = csv.reader(f)
+        if not rd:
+            return
+        context = solved_and_blackhole_crawler(list(rd))
+    with open(CSV_PATH, "w", newline="", encoding="utf-8") as f:
+        wr = csv.writer(f)
+        wr.writerows(context)
+
+
+def solved_and_blackhole_crawler(rd: list) -> List[List]:
+    context = []
+
     with open(PARENT_DIR + "/doc/42intra.txt", "r", encoding="utf-8") as f:
         lines = f.readlines()
     name = lines[0].strip()
     pwd = lines[1].strip()
 
-    service = Service(PARENT_DIR + "/chromedriver")
-    option = Options()
-    option.add_argument("--headless")
-    driver = webdriver.Chrome(service=service, options=option)
-    driver.get("https://profile.intra.42.fr/users")
-    driver.find_element(By.ID, "username").send_keys(name)
-    driver.find_element(By.ID, "password").send_keys(pwd)
-    driver.find_element(By.ID, "kc-login").click()
-    wait = WebDriverWait(driver, 10)
-
-    with open(CSV_PATH, "r", encoding="utf-8") as f:
-        rd = csv.reader(f)
-        if not rd:
-            return
-        for name, intra_id, baek_id in rd:
-            USERS.append(Student(name, intra_id, baek_id))
-            driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
-            wait.until(
-                EC.presence_of_element_located((By.XPATH, BLACKHOLE_XPATH))
-            )  # 로딩까지 기다림
-            blackhole = driver.find_element(By.XPATH, BLACKHOLE_XPATH).text
-            grade = driver.find_element(By.XPATH, GRADE_XPATH).text
-            if blackhole == "" and grade == "Learner":
-                driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
-                wait.until(
-                    EC.presence_of_element_located((By.XPATH, BLACKHOLE_XPATH))
-                )  # 로딩까지 기다림
-                blackhole = driver.find_element(By.XPATH, BLACKHOLE_XPATH).text
-            try:
-                blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
-                blackhole = blackhole - datetime.datetime.now()
-                USERS[-1].set_blackhole(str(blackhole.days + 1))
-            except ValueError:
-                if blackhole == "":
-                    if grade == "Learner":
-                        USERS[-1].set_blackhole("Not found")
-                    elif grade == "Member":
-                        USERS[-1].set_blackhole("∞")
-                    elif grade == "Novice":
-                        USERS[-1].set_blackhole("Piscine")
-                else:
-                    USERS[-1].set_blackhole(blackhole)
-    driver.quit()
-
-
-def print_loc() -> str:
-    text = f":수빈: 현재 시각 {datetime.datetime.now()} :수빈:\n\n"  # 현재 시각
-    pos: Dict[str, List[str]] = {"cluster": [], "home": [], "leave": []}
-    for student in USERS:
-        print(type(student.get_loc()), student.get_loc())
-        if student.get_loc() == "null":
-            if student.get_is_working():
-                pos["leave"].append(
-                    f"{student.get_name()} ( 블랙홀: {student.get_blackhole()}  |  퇴근함)\n"
-                )
-            else:
-                pos["home"].append(
-                    f"{student.get_name()} ( 블랙홀: {student.get_blackhole()}  |  출근 안함 )\n"
-                )
-        else:
-            pos["cluster"].append(
-                f"{student.get_name()} ( 블랙홀: {student.get_blackhole()}  |  {student.get_loc()} )\n"
+    cral = Crawler(name, pwd)
+    for name, intra_id, baek_id, day, count, flag, date in tqdm(
+        rd, desc="진행도", total=len(rd), ncols=70, ascii=" =", leave=True
+    ):
+        time.sleep(0.1)
+        blackhole = cral.get_blackhole(intra_id)
+        data = cral.get_info(baek_id)
+        if type(data) is int:  # solved.ac id가 없는 사람
+            context.append([name, intra_id, baek_id, "0", "0", "0", TODAY])
+            USERS["none_user"].append(
+                Student(name, intra_id, baek_id, TIER[0], 0, blackhole)
             )
-    if pos["cluster"]:
-        text += "\n<아마 코딩 중>\n"
-    for t in pos["cluster"]:
-        text += t
-    if pos["leave"]:
-        text += "\n<퇴근 or 클러스터 어딘가>\n"
-    for t in pos["leave"]:
-        text += t
-    if pos["home"]:
-        text += "\n<출근 안함 or 노트북>\n"
-    for t in pos["home"]:
-        text += t
-    text += (
-        "\n:재권_공지: 백준 문제 풀이는 한가해지면 업데이트할 예정입니다. 블랙홀 기간은 크롤링 결과에 따라 출력되지 않을 수 있습니다. :재권_공지:\n"
-    )
+            continue
+
+        rank, solved_count = data
+        if date == TODAY and flag == "1":  # 이미 오늘 푼 사람
+            context.append([name, intra_id, baek_id, day, count, flag, TODAY])
+            USERS["solved"].append(
+                Student(name, intra_id, baek_id, TIER[rank], solved_count, blackhole)
+            )
+        elif int(count) >= solved_count:  # 안 푼 사람
+            i_day = int(day)
+            if date != TODAY:
+                i_day = 0 if int(day) >= 0 else int(day) - 1
+            context.append([name, intra_id, baek_id, i_day, solved_count, "0", TODAY])
+            USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[rank], i_day, blackhole))  # type: ignore
+        elif int(count) < solved_count:  # 오늘 푼 사람
+            i_day = int(day) + 1 if int(day) > 0 else 1
+            context.append([name, intra_id, baek_id, i_day, solved_count, "1", TODAY])
+            USERS["solved"].append(
+                Student(name, intra_id, baek_id, TIER[rank], i_day, blackhole)
+            )
+    return context
+
+
+def print_result() -> str:
+    text = f"\n\n:수빈: 현재 시각: {datetime.datetime.now()} :수빈:\n\n"  # 현재 시각
+    pos: Dict[str, Dict[str, List[str]]] = {
+        "solved": {"cluster": [], "home": [], "leave": []},
+        "unsolved": {"cluster": [], "home": [], "leave": []},
+        "none_user": {"cluster": [], "home": [], "leave": []},
+    }
+    for key, value in USERS.items():
+        for student in value:
+            if student.get_loc() == "null":
+                if student.get_is_working():
+                    pos[key]["leave"].append(
+                        f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  퇴근함 )\n"
+                    )
+                else:
+                    pos[key]["home"].append(
+                        f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  출근 안 함 )\n"
+                    )
+            else:
+                pos[key]["cluster"].append(
+                    f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  {student.get_loc()} )\n"
+                )
+    if (
+        len(pos["solved"]["cluster"])
+        + len(pos["solved"]["home"])
+        + len(pos["solved"]["leave"])
+    ):
+        text += "\n<푼 사람>\n"
+        for v in pos["solved"].values():
+            for t in v:
+                text += t
+            if v:
+                text += "\n"
+    if (
+        len(pos["unsolved"]["cluster"])
+        + len(pos["unsolved"]["home"])
+        + len(pos["unsolved"]["leave"])
+    ):
+        text += "\n<안 푼 사람>\n"
+        for v in pos["unsolved"].values():
+            for t in v:
+                text += t
+            if v:
+                text += "\n"
+    if (
+        len(pos["none_user"]["cluster"])
+        + len(pos["none_user"]["home"])
+        + len(pos["none_user"]["leave"])
+    ):
+        text += "\n<백준 아이디 알려 주고, solved.ac 동의 해주세요>\n"
+        for v in pos["none_user"].values():
+            for t in v:
+                text += t
+            if v:
+                text += "\n"
+    text += "\n:재권_공지: 하루 시작은 새벽 6시입니다. 블랙홀 기간은 때에 따라 안 나올 수 있습니다. :재권_공지:\n"
     print(text)
     return text
 

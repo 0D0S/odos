@@ -20,7 +20,7 @@
 
 ### commit message
 
-- 메세지는 [gitmoji homepage](https://gitmoji.dev/)나 [GITMOJI.md](GITMOJI.md) 참고
+- 메세지는 [gitmoji](https://gitmoji.dev/) 활용
 
 ### formatting
 
@@ -73,13 +73,15 @@
 ![display.png](img/display.png)
 
 - 이모지와 이름
+- 백준 랭크
+- 연속으로 풀지 않은 날짜 or 연속으로 푼 날짜
 - 블랙홀 기간
 - 출퇴근 여부
 
 ### csv 인덱스
 
-| 이름 | intra id | baekjoon id |
-|:--:|:--------:|:-----------:|
+| 이름 | intra id | baekjoon id | 연속으로 푼 문제 수 | 총 푼 문제 수 | 오늘 확인했는가 | 확인한 날짜 |
+|:--:|:--------:|:-----------:|:-----------:|:--------:|:--------:|:------:|
 
 ### 구성원
 
