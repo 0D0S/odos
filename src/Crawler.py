@@ -16,6 +16,7 @@ class Crawler:
     def __init__(self, name: str, pwd: str):
         self.solved_url = "https://solved.ac/api/v3/user/show"
         self.blackhole_xpath = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
+        self.grade_xpath = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[1]/div[5]/span[2]"
 
         self.service = Service(odos.PARENT_DIR + "/chromedriver")
         self.option = Options()
@@ -45,12 +46,13 @@ class Crawler:
             EC.presence_of_element_located((By.XPATH, self.blackhole_xpath))
         )  # 로딩까지 기다림
         blackhole = self.driver.find_element(By.XPATH, self.blackhole_xpath).text
+        grade = self.driver.find_element(By.XPATH, self.grade_xpath).text
         try:
             blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
             blackhole = blackhole - datetime.datetime.now()
             blackhole = str(blackhole.days + 1)
         except ValueError:
-            pass
+            blackhole = "∞" if grade == "Member" else "Not found"
 
         return blackhole
 
