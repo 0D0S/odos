@@ -161,7 +161,7 @@ def print_result() -> str:
                 text += t
             if v:
                 text += "\n"
-    text += "\n:재권_공지: 하루 시작은 새벽 6시입니다. 백준 결과는 매일 21시에 제가 수동으로 올립니다. :재권_공지:\n"
+    text += "\n:재권_공지: 하루 시작은 새벽 6시입니다. 블랙홀 기간은 때에 따라 안 나올 수 있습니다. :재권_공지:\n"
     print(text)
     return text
 
