@@ -52,7 +52,7 @@ class Crawler:
             blackhole = blackhole - datetime.datetime.now()
             blackhole = str(blackhole.days + 1)
         except ValueError:
-            blackhole = "∞" if grade == "Member" else "Not found"
+            blackhole = "∞" if grade == "Member" else "???"
 
         return blackhole
 

@@ -118,11 +118,11 @@ def print_result() -> str:
             if student.get_loc() == "null":
                 if student.get_is_working():
                     pos[key]["leave"].append(
-                        f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  퇴근함 )\n"
+                        f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  퇴근함 or 노트북)\n"
                     )
                 else:
                     pos[key]["home"].append(
-                        f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  출근 안 함 )\n"
+                        f"{student.get_name()} {student.get_rank()} ( solve: {student.get_day()}일  |  블랙홀: {student.get_blackhole()}일  |  출근 안 함 or 노트북 )\n"
                     )
             else:
                 pos[key]["cluster"].append(
