@@ -89,12 +89,12 @@ def solved_and_blackhole_crawler(rd: list) -> List[List]:
         if date == TODAY and flag == "1":  # 이미 오늘 푼 사람
             context.append([name, intra_id, baek_id, day, count, flag, TODAY])
             USERS["solved"].append(
-                Student(name, intra_id, baek_id, TIER[rank], solved_count, blackhole)
+                Student(name, intra_id, baek_id, TIER[rank], day, blackhole)
             )
         elif int(count) >= solved_count:  # 안 푼 사람
             i_day = int(day)
             if date != TODAY:
-                i_day = 0 if int(day) >= 0 else int(day) - 1
+                i_day = 0 if int(day) > 0 else int(day) - 1
             context.append([name, intra_id, baek_id, i_day, solved_count, "0", TODAY])
             USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[rank], i_day, blackhole))  # type: ignore
         elif int(count) < solved_count:  # 오늘 푼 사람
