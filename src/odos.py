@@ -87,7 +87,7 @@ def solved_and_blackhole_crawler(rd: list) -> List[List]:
 
         rank, solved_count = data
         if date == TODAY and flag == "1":  # 이미 오늘 푼 사람
-            context.append([name, intra_id, baek_id, day, count, flag, TODAY])
+            context.append([name, intra_id, baek_id, day, solved_count, flag, TODAY])
             USERS["solved"].append(
                 Student(name, intra_id, baek_id, TIER[rank], day, blackhole)
             )
