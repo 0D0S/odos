@@ -2,7 +2,7 @@
 
 # GitHub 조직 이름과 토큰
 ORG_NAME="0D0S"
-TOKEN="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"
+TOKEN="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"
 
 # 리포지토리 이름
 REPO_NAME="odos"
