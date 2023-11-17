@@ -13,4 +13,4 @@ git add .
 git commit -m ":memo: update `date +%F+%H:%M`"
 
 # 조직 이름과 토큰을 사용하여 GitHub에 push
-git push https://$ORG_NAME:$TOKEN@github.com/$ORG_NAME/$REPO_NAME.git main
+git push https://$ORG_NAME:$TOKEN@github.com/$ORG_NAME/$REPO_NAME.git
