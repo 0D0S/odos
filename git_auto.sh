@@ -1,3 +1,3 @@
 git add .
-git commit -m ":memo: `date` update"
+git commit -m ":memo: `date +%F` update"
 git push
