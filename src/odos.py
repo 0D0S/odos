@@ -180,7 +180,7 @@ def print_result() -> str:
                 text += t
             if v:
                 text += "\n"
-    text += "\n:재권_공지: 하루 시작은 새벽 6시입니다. 블랙홀 기간은 때에 따라 안 나올 수 있습니다. :재권_공지:\n"
+    text += "\n:재권_공지: 5시 55분 ~ 6시 사이에 푼 문제는 반영되지 않을 수 있습니다. :재권_공지:\n"
     print(text)
     return text
 
