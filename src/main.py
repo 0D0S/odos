@@ -1,6 +1,5 @@
-import datetime
-
 import odos
+import datetime
 
 if __name__ == "__main__":
     is_last_check = datetime.datetime.now().hour < 6
