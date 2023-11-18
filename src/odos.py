@@ -53,6 +53,9 @@ TIER: List = [
 
 
 def read_and_write_csv() -> None:
+    """
+    csv 파일을 읽어서 처리 후, csv 파일을 최신화 하는 함수
+    """
     with open(CSV_PATH, "r", encoding="utf-8") as f:
         rd = csv.reader(f)
         if not rd:
@@ -64,6 +67,14 @@ def read_and_write_csv() -> None:
 
 
 def solved_and_blackhole_crawler(rd: list) -> List[List]:
+    """
+    solved.ac와 42intra에서 필요한 정보를 얻어서 저장하고 csv파일에 저장할 데이터를 반환하는 함수
+    Args:
+        rd: csv파일 내용이 들어있는 리스트
+
+    Returns:
+        얻어온 정보를 사람 별로 저장한 리스트
+    """
     context = []
 
     with open(PARENT_DIR + "/doc/42intra.txt", "r", encoding="utf-8") as f:
@@ -107,6 +118,11 @@ def solved_and_blackhole_crawler(rd: list) -> List[List]:
 
 
 def print_result() -> str:
+    """
+    정리한 정보를 일정 형태로 가공하여 반환하는 함수
+    Returns:
+        일정 형태로 가공한 문자열
+    """
     text = f"\n\n:수빈: 현재 시각: {datetime.datetime.now()} :수빈:\n\n"  # 현재 시각
     pos: Dict[str, Dict[str, List[str]]] = {
         "solved": {"cluster": [], "home": [], "leave": []},
@@ -167,6 +183,12 @@ def print_result() -> str:
 
 
 def chat_message(channel: str, message: str) -> None:
+    """
+    슬랙 채널에 주어진 메세지를 출력하는 함수
+    Args:
+        channel: 메세지를 출력할 슬랙 채널명
+        message: 출력할 메세지
+    """
     with open(SLACK_TOKEN_PATH, "r") as token:
         slack_token = token.readline()
     slack_api = SlackAPI(slack_token)

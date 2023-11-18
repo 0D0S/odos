@@ -14,13 +14,23 @@ class Student:  # type: ignore
         day: int,
         blackhole: str,
     ) -> None:
-        self._name: str = name  # 별명이 포함된 이름
-        self._intra_id: str = intra_id  # 42seoul 인트라 아이디
-        self._baek_id: str = baek_id  # 백준 아이디
-        self._loc, self._is_working = self._get_location()  # 클러스터 위치, 출퇴근 여부
-        self._blackhole: str = blackhole  # 남은 블랙홀 기간
-        self._rank: str = rank  # 백준 랭크
-        self._day: int = day  # 연속으로 문제 푼 일 수
+        """
+        42학생의 정보를 저장할 객체
+        Args:
+            name: 이름
+            intra_id: 42intra id
+            baek_id: 백준 id
+            rank: 백준 rank
+            day: 연속으로 푼 문제일 수
+            blackhole: 남은 블랙홀 기간
+        """
+        self._name: str = name
+        self._intra_id: str = intra_id
+        self._baek_id: str = baek_id
+        self._loc, self._is_working = self._get_location()
+        self._blackhole: str = blackhole
+        self._rank: str = rank
+        self._day: int = day
 
     def _get_location(self) -> Tuple[str, bool]:
         """

@@ -14,6 +14,12 @@ import odos
 
 class Crawler:
     def __init__(self, name: str, pwd: str):
+        """
+        api 요청 및 웹 크롤링을 위한 객체
+        Args:
+            name: 42intra id
+            pwd:  42intra pwd
+        """
         self.solved_url = "https://solved.ac/api/v3/user/show"
         self.blackhole_xpath = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
         self.grade_xpath = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[1]/div[5]/span[2]"
@@ -29,6 +35,9 @@ class Crawler:
         self.wait = WebDriverWait(self.driver, 10)
 
     def __del__(self):
+        """
+        Crawler 객체가 소멸할 때, driver을 꺼준다.
+        """
         self.driver.quit()
 
     def get_blackhole(self, intra_id: str) -> str:
