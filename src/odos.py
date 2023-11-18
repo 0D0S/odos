@@ -52,25 +52,28 @@ TIER: List = [
 ]
 
 
-def read_and_write_csv() -> None:
+def read_and_write_csv(flag: bool) -> None:
     """
     csv 파일을 읽어서 처리 후, csv 파일을 최신화 하는 함수
+    Args:
+        flag: 그 날의 마지막 검사인지 판별하는 flag
     """
     with open(CSV_PATH, "r", encoding="utf-8") as f:
         rd = csv.reader(f)
         if not rd:
             return
-        context = solved_and_blackhole_crawler(list(rd))
+        context = solved_and_blackhole_crawler(list(rd), flag)
     with open(CSV_PATH, "w", newline="", encoding="utf-8") as f:
         wr = csv.writer(f)
         wr.writerows(context)
 
 
-def solved_and_blackhole_crawler(rd: list) -> List[List]:
+def solved_and_blackhole_crawler(rd: list, flag: bool) -> List[List]:
     """
     solved.ac와 42intra에서 필요한 정보를 얻어서 저장하고 csv파일에 저장할 데이터를 반환하는 함수
     Args:
         rd: csv파일 내용이 들어있는 리스트
+        flag: 그 날의 마지막 검사인지 판별하는 flag
 
     Returns:
         얻어온 정보를 사람 별로 저장한 리스트
@@ -104,7 +107,7 @@ def solved_and_blackhole_crawler(rd: list) -> List[List]:
             )
         elif int(count) >= solved_count:  # 안 푼 사람
             i_day = int(day)
-            if date != TODAY:
+            if flag:  # 그 날의 마지막 검사일 때 최신화
                 i_day = 0 if int(day) > 0 else int(day) - 1
             context.append([name, intra_id, baek_id, i_day, solved_count, "0", TODAY])
             USERS["unsolved"].append(Student(name, intra_id, baek_id, TIER[rank], i_day, blackhole))  # type: ignore
