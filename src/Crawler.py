@@ -2,6 +2,7 @@ import datetime
 from typing import Tuple
 
 import requests
+import selenium.common.exceptions
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -32,7 +33,7 @@ class Crawler:
         self.driver.find_element(By.ID, "username").send_keys(name)
         self.driver.find_element(By.ID, "password").send_keys(pwd)
         self.driver.find_element(By.ID, "kc-login").click()
-        self.wait = WebDriverWait(self.driver, 10)
+        self.wait = WebDriverWait(self.driver, 20)
 
     def __del__(self):
         """
@@ -50,17 +51,18 @@ class Crawler:
             카뎃: blackhole 기간
             멤버: 빈 문자열
         """
-        self.driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
-        self.wait.until(
-            EC.presence_of_element_located((By.XPATH, self.blackhole_xpath))
-        )  # 로딩까지 기다림
-        blackhole = self.driver.find_element(By.XPATH, self.blackhole_xpath).text
-        grade = self.driver.find_element(By.XPATH, self.grade_xpath).text
+        grade = ""
         try:
+            self.driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
+            self.wait.until(
+                EC.presence_of_element_located((By.XPATH, self.blackhole_xpath))
+            )  # 로딩까지 기다림
+            blackhole = self.driver.find_element(By.XPATH, self.blackhole_xpath).text
+            grade = self.driver.find_element(By.XPATH, self.grade_xpath).text
             blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
             blackhole = blackhole - datetime.datetime.now()
             blackhole = str(blackhole.days + 1)
-        except ValueError:
+        except (ValueError, selenium.common.exceptions.TimeoutException) as e:
             blackhole = "∞" if grade == "Member" else "???"
 
         return blackhole
