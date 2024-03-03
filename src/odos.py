@@ -91,7 +91,7 @@ def solved_and_blackhole_crawler(rd: list, is_last_check: bool) -> List[List]:
     ):
         time.sleep(0.1)
         # blackhole = cral.get_blackhole(intra_id)
-        blackhole = "현재 블랙홀 기간은 가져오지 않습니다."
+        blackhole = ":D"
         data = cral.get_info(baek_id)
         if type(data) is int:  # solved.ac id가 없는 사람
             context.append([name, intra_id, baek_id, "0", "0", "0", TODAY])
