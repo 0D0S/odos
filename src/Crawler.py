@@ -22,50 +22,50 @@ class Crawler:
             pwd:  42intra pwd
         """
         self.solved_url = "https://solved.ac/api/v3/user/show"
-        self.blackhole_xpath = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
-        self.grade_xpath = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[1]/div[5]/span[2]"
+        # self.blackhole_xpath = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div[2]/div"
+        # self.grade_xpath = "/html/body/div[4]/div[2]/div/div[2]/div/div[1]/div[2]/div/div[1]/div[5]/span[2]"
+        #
+        # self.service = Service(odos.PARENT_DIR + "/chromedriver")
+        # self.option = Options()
+        # self.option.add_argument("--headless")
+        # self.driver = webdriver.Chrome(service=self.service, options=self.option)
+        # self.driver.get("https://profile.intra.42.fr")
+        # self.driver.find_element(By.ID, "username").send_keys(name)
+        # self.driver.find_element(By.ID, "password").send_keys(pwd)
+        # self.driver.find_element(By.ID, "kc-login").click()
+        # self.wait = WebDriverWait(self.driver, 20)
 
-        self.service = Service(odos.PARENT_DIR + "/chromedriver")
-        self.option = Options()
-        self.option.add_argument("--headless")
-        self.driver = webdriver.Chrome(service=self.service, options=self.option)
-        self.driver.get("https://profile.intra.42.fr")
-        self.driver.find_element(By.ID, "username").send_keys(name)
-        self.driver.find_element(By.ID, "password").send_keys(pwd)
-        self.driver.find_element(By.ID, "kc-login").click()
-        self.wait = WebDriverWait(self.driver, 20)
+    # def __del__(self):
+    #     """
+    #     Crawler 객체가 소멸할 때, driver을 꺼준다.
+    #     """
+    #     self.driver.quit()
 
-    def __del__(self):
-        """
-        Crawler 객체가 소멸할 때, driver을 꺼준다.
-        """
-        self.driver.quit()
-
-    def get_blackhole(self, intra_id: str) -> str:
-        """
-        blackhole을 반환하는 함수
-        Args:
-            intra_id
-
-        Returns:
-            카뎃: blackhole 기간
-            멤버: 빈 문자열
-        """
-        grade = ""
-        try:
-            self.driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
-            self.wait.until(
-                EC.presence_of_element_located((By.XPATH, self.blackhole_xpath))
-            )  # 로딩까지 기다림
-            blackhole = self.driver.find_element(By.XPATH, self.blackhole_xpath).text
-            grade = self.driver.find_element(By.XPATH, self.grade_xpath).text
-            blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
-            blackhole = blackhole - datetime.datetime.now()
-            blackhole = str(blackhole.days + 1)
-        except (ValueError, selenium.common.exceptions.TimeoutException) as e:
-            blackhole = "∞" if grade == "Member" else "???"
-
-        return blackhole
+    # def get_blackhole(self, intra_id: str) -> str:
+    #     """
+    #     blackhole을 반환하는 함수
+    #     Args:
+    #         intra_id
+    #
+    #     Returns:
+    #         카뎃: blackhole 기간
+    #         멤버: 빈 문자열
+    #     """
+    #     grade = ""
+    #     try:
+    #         self.driver.get(f"https://profile.intra.42.fr/users/{intra_id}")
+    #         self.wait.until(
+    #             EC.presence_of_element_located((By.XPATH, self.blackhole_xpath))
+    #         )  # 로딩까지 기다림
+    #         blackhole = self.driver.find_element(By.XPATH, self.blackhole_xpath).text
+    #         grade = self.driver.find_element(By.XPATH, self.grade_xpath).text
+    #         blackhole = datetime.datetime.strptime(blackhole, "%Y. %m. %d.")
+    #         blackhole = blackhole - datetime.datetime.now()
+    #         blackhole = str(blackhole.days + 1)
+    #     except (ValueError, selenium.common.exceptions.TimeoutException) as e:
+    #         blackhole = "∞" if grade == "Member" else "???"
+    #
+    #     return blackhole
 
     def get_info(self, baek_id: str) -> Tuple[int, int] | int:
         """
