@@ -1,19 +1,12 @@
 # 0D0S
 
-## 팀 소개
+## 구성원
 
-### 팀원
+여러 명이서 하려 했으나...
 
 <table>
   <tbody>
-    <tr>
-      <td align="center"><a href="https://github.com/subillie"><img src="https://avatars.githubusercontent.com/u/112736264?v=4"width="100px;" alt=""/><br /><sub><b>이수빈</b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/Kdelphinus"><img src="https://avatars.githubusercontent.com/u/68101516?v=4" width="100px;" alt=""/><br /><sub><b>고명준</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/inwoo0115"><img src="https://avatars.githubusercontent.com/u/88661835?v=4" width="100px;" alt=""/><br /><sub><b>이원진</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/wdd1016"><img src="https://avatars.githubusercontent.com/u/41848796?v=4" width="100px;" alt=""/><br /><sub><b>정주영</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/Wilbur0306"><img src="https://avatars.githubusercontent.com/u/95270655?v=4" width="100px;" alt=""/><br /><sub><b>정다인</b></sub></a><br /></td>
-    </tr>
-  </tbody>
 </table>
 
 ## Convention
